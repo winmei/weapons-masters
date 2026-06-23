@@ -1,0 +1,85 @@
+syntax = "proto3";
+package wm;
+
+message PlayerInput {
+  uint32 sequence = 1;
+  uint32 entity_id = 2;
+  InputType input_type = 3;
+  Vec2 direction = 4;
+  SkillUse skill_use = 5;
+  DodgeInput dodge = 6;
+  uint32 client_tick = 7;
+}
+
+message WorldSnapshot {
+  uint32 tick = 1;
+  uint32 last_processed_input = 2;
+  repeated EntityState entities = 3;
+  repeated CombatEvent combat_events = 4;
+  uint32 local_entity_id = 5;
+}
+
+message EntityState {
+  uint32 entity_id = 1;
+  Vec2 position = 2;
+  float rotation = 3;
+  uint32 collision_flags = 4;
+  uint32 last_processed_input = 5;
+  int32 hp = 6;
+  int32 max_hp = 7;
+  EntityAction current_action = 8;
+}
+
+message Vec2 {
+  float x = 1;
+  float y = 2;
+}
+
+enum InputType {
+  MOVE = 0;
+  STOP = 1;
+  SKILL = 2;
+  DODGE = 3;
+}
+
+message SkillUse {
+  uint32 skill_id = 1;
+  uint32 target_entity_id = 2;
+}
+
+message DodgeInput {
+  Vec2 direction = 1;
+}
+
+message DamageEvent {
+  uint32 source_entity_id = 1;
+  uint32 target_entity_id = 2;
+  int32 damage = 3;
+  int32 remaining_hp = 4;
+}
+
+message DodgeResult {
+  uint32 entity_id = 1;
+  bool success = 2;
+}
+
+message DeathEvent {
+  uint32 entity_id = 1;
+  uint32 killer_id = 2;
+}
+
+message CombatEvent {
+  oneof event {
+    DamageEvent damage = 1;
+    DodgeResult dodge = 2;
+    DeathEvent death = 3;
+  }
+}
+
+enum EntityAction {
+  IDLE = 0;
+  MOVING = 1;
+  CASTING = 2;
+  DODGING = 3;
+  DEAD = 4;
+}

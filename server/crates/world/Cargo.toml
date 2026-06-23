@@ -1,0 +1,13 @@
+[package]
+name = "world"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gateway = { path = "../gateway" }
+shared = { path = "../shared" }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+prost = { workspace = true }
+bevy_ecs = { workspace = true }

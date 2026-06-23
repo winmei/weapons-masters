@@ -1,0 +1,119 @@
+[gd_scene load_steps=13 format=3 uid="uid://cxab11x8p623c"]
+
+[ext_resource type="Script" path="res://scripts/Network/NetworkManager.cs" id="1_network"]
+[ext_resource type="Script" path="res://scripts/Network/InputSender.cs" id="2_input"]
+[ext_resource type="Script" path="res://scripts/Network/PacketHandler.cs" id="3_packet"]
+[ext_resource type="Script" path="res://scripts/Prediction/ClientPrediction.cs" id="4_prediction"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_player"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial_player"]
+albedo_color = Color(0.2, 0.6, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape_player"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+size = Vector3(5, 1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial_wall"]
+albedo_color = Color(0.95, 0.22, 0.18, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape_wall"]
+size = Vector3(5, 1, 0.5)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+size = Vector2(18, 18)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial_floor"]
+albedo_color = Color(0.16, 0.17, 0.18, 1)
+
+[node name="Main" type="Node3D"]
+
+[node name="NetworkManager" type="Node" parent="."]
+script = ExtResource("1_network")
+InputSenderPath = NodePath("../InputSender")
+PacketHandlerPath = NodePath("../PacketHandler")
+LocalPlayerPath = NodePath("../Player")
+
+[node name="InputSender" type="Node" parent="."]
+script = ExtResource("2_input")
+
+[node name="PacketHandler" type="Node" parent="."]
+script = ExtResource("3_packet")
+LocalPlayerPath = NodePath("../Player")
+LocalHpLabelPath = NodePath("../Player/HpLabel")
+LocalHpFramePath = NodePath("../HUD/LocalHpFrame")
+LocalHpBarPath = NodePath("../HUD/LocalHpBar")
+RemotePlayersRootPath = NodePath("../RemotePlayers")
+TargetFramePath = NodePath("../HUD/TargetFrame")
+TargetHpBarPath = NodePath("../HUD/TargetHpBar")
+
+[node name="RemotePlayers" type="Node3D" parent="."]
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial_floor")
+
+[node name="Wall" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 2.75)
+
+[node name="WallMesh" type="MeshInstance3D" parent="Wall"]
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("StandardMaterial_wall")
+
+[node name="WallCollision" type="CollisionShape3D" parent="Wall"]
+shape = SubResource("BoxShape_wall")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("4_prediction")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape_player")
+
+[node name="PlayerCube" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_player")
+surface_material_override/0 = SubResource("StandardMaterial_player")
+
+[node name="HpLabel" type="Label3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+billboard = 1
+text = "200/200"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 7, 7)
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="LocalHpFrame" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 18.0
+offset_right = 180.0
+offset_bottom = 46.0
+text = "HP 200/200"
+
+[node name="LocalHpBar" type="ProgressBar" parent="HUD"]
+offset_left = 190.0
+offset_top = 18.0
+offset_right = 390.0
+offset_bottom = 42.0
+max_value = 200.0
+value = 200.0
+show_percentage = false
+
+[node name="TargetFrame" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 52.0
+offset_right = 300.0
+offset_bottom = 80.0
+text = "Target: none"
+
+[node name="TargetHpBar" type="ProgressBar" parent="HUD"]
+offset_left = 190.0
+offset_top = 52.0
+offset_right = 390.0
+offset_bottom = 76.0
+max_value = 200.0
+value = 0.0
+show_percentage = false

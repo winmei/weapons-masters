@@ -1,0 +1,23 @@
+# Rust
+server/target/
+
+# Godot
+client/.godot/
+client/.mono/
+client/export_presets.cfg
+client/imported/
+client/*.translation
+client/.import/
+
+# .NET
+client/bin/
+client/obj/
+*.user
+*.suo
+*.nupkg
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
