@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Network Protocol"
+  short_description: "Netcode Protobuf, Gateway e transportes"
+  default_prompt: "Use $wm-network-protocol para alterar mensagens Protobuf, Gateway ou sincronização de rede do Weapons Masters."

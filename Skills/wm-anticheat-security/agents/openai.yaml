@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Anti-Cheat Security"
+  short_description: "Anti-cheat, abusos e seguranca MMO"
+  default_prompt: "Use $wm-anticheat-security para revisar ou implementar protecoes anti-cheat no Weapons Masters."

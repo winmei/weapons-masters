@@ -365,30 +365,36 @@ mod mob_tests {
 
 ## Checklist
 
-- [ ] `docker/compose.yml` com PostgreSQL + Redis + NATS
-- [ ] `docker compose up -d` funcionando
-- [ ] Schema SQL criado (`migrations/001_initial.sql`)
-- [ ] Crate `persistence`: SnapshotWriter + EventWriter
-- [ ] Crate `services/auth`: registro + login + JWT (sqlx + argon2)
-- [ ] Auth: `verify_password` via `task::spawn_blocking` (não bloquear Tokio)
-- [ ] Refresh token rotativo no Redis
-- [ ] IP binding: login vincula IP da sessão no Redis
-- [ ] Gateway: `validate_session_ip()` em cada pacote recebido (rejeita IP divergente)
-- [ ] Carregar CharacterData do PG ao logar → enviar ao cliente
-- [ ] Salvar estado via NATS JetStream a cada 30s
-- [ ] Graceful shutdown: SIGTERM → flush → NATS → PG
-- [ ] `MobDefinition`: tipo, HP, dano, loot table, respawn time
-- [ ] 3 tipos de mob (fraco, médio, forte) com stats diferentes
-- [ ] `MobAI` state machine (Idle → Patrol → Aggro → Attack → Dead)
-- [ ] `ExperienceSystem`: XP por mob → level up → stat scaling
-- [ ] `LootSystem`: drop table aleatório → adiciona ao inventário
-- [ ] Proto: `LoginRequest`, `LoginResponse`, `CharacterData`, `LevelUpEvent`, `LootDrop`
-- [ ] Client: tela de login (username + password + botão)
-- [ ] Client: carregar mundo após login
-- [ ] Client: mobs visíveis com HP bar + IA (andam, atacam)
-- [ ] Client: painel de inventário (tecla "I")
-- [ ] Client: barra de XP + indicador de nível
-- [ ] Client: mapa básico (terreno com árvores, low-poly ou assets gratuitos)
+- [x] `docker/compose.yml` com PostgreSQL + Redis + NATS
+- [x] `docker/compose.yml` monta `./migrations:/docker-entrypoint-initdb.d` (schema aplicado automaticamente no primeiro `docker compose up`)
+- [x] Schema SQL criado (`docker/migrations/001_initial.sql`)
+- [x] Crate `persistence`: DB Sync Worker (NATS → PostgreSQL) com `run_db_sync`
+- [x] Crate `services/auth`: registro + login + JWT (sqlx + argon2 + jsonwebtoken)
+- [x] Auth: `verify_password` via `task::spawn_blocking` (não bloquear Tokio)
+- [ ] Refresh token rotativo no Redis (pendente)
+- [x] IP binding: login vincula IP da sessão no Redis
+- [ ] Gateway: `validate_session_ip()` em cada pacote recebido (pendente — próxima iteração)
+- [x] Gateway: porta 8081 separada para auth (LoginRequest/RegisterRequest não chegam ao canal de input do jogo)
+- [x] Carregar CharacterData do PG ao logar → enviar ao cliente (auth_service.rs: handle_login + load_character_data)
+- [x] Salvar estado via NATS JetStream a cada 30s (emit_persistence_events_system: SNAPSHOT_INTERVAL_TICKS=900 @ 30Hz)
+- [x] Graceful shutdown: SIGTERM → flush → NATS → PG (await_shutdown_signal + flush_all_players_on_shutdown)
+- [x] `MobDefinition`: tipo, HP, dano, loot table, respawn time
+- [x] 3 tipos de mob: Goblin (fraco), Orc (médio), Troll (forte)
+- [x] `MobAI` state machine (Idle → Aggro → Attack → Dead → Respawn)
+- [x] `ExperienceSystem`: XP por mob → level up (threshold N×100)
+- [x] `LootSystem`: drop table aleatório com pseudo-RNG determinístico
+- [x] **`process_player_vs_mob_system`**: jogadores podem atacar mobs com skills (Tab + 1/2)
+- [x] Mobs incluídos no `WorldSnapshot` via campo `mob_entities` (field 8)
+- [x] `LevelUpEvent` e `LootDrop` incluídos no snapshot (fields 6 e 7)
+- [x] Proto: `LoginRequest`, `LoginResponse`, `CharacterData`, `LevelUpEvent`, `LootDrop`
+- [x] Client: tela de login (username + password + botão Login/Register)
+- [x] Client: renderização de mobs (cubos vermelhos) com HP bar
+- [x] Client: Tab seleciona mobs e jogadores (lista unificada)
+- [x] Client: floating text para level up (dourado) e loot (verde)
+- [x] Client: carregar mundo após login com dados do personagem (PacketHandler.InitializeHudFromSession + GameAuthPacket handshake)
+- [x] Client: painel de inventário (tecla "I") (InventoryPanel.cs + open_inventory action keycode 73)
+- [x] Client: barra de XP + indicador de nível (XpBar + XpLabel + CharacterInfoLabel em Main.tscn)
+- [x] Client: mapa básico (terreno com árvores, low-poly ou assets gratuitos) (MapSetup.cs: 4 paredes + 8 árvores procedurais)
 - [ ] **Teste**: criar conta → logar → matar mobs → nível up → pegar loot → deslogar → relogar → tudo salvo
 - [ ] **Teste**: matar server (Ctrl+C) → reiniciar → progresso mantido
 - [ ] **Commit: "Step 3 done — persistent world with mobs, XP, inventory"**

@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://login_scene"]
+
+[ext_resource type="Script" path="res://scripts/UI/LoginScreen.cs" id="1_login"]
+
+[node name="Login" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_login")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+offset_left = 340.0
+offset_top = 200.0
+offset_right = 680.0
+offset_bottom = 480.0
+
+[node name="Title" type="Label" parent="VBox"]
+text = "Weapons Masters"
+horizontal_alignment = 1
+
+[node name="UsernameField" type="LineEdit" parent="VBox"]
+placeholder_text = "Username"
+
+[node name="PasswordField" type="LineEdit" parent="VBox"]
+placeholder_text = "Password"
+secret = true
+
+[node name="LoginButton" type="Button" parent="VBox"]
+text = "Login"
+
+[node name="RegisterButton" type="Button" parent="VBox"]
+text = "Register"
+
+[node name="StatusLabel" type="Label" parent="VBox"]
+text = ""
+horizontal_alignment = 1

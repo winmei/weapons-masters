@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Game Design Economy"
+  short_description: "Design de combate, progressao e economia"
+  default_prompt: "Use $wm-game-design-economy para desenhar sistemas de progressao e economia do Weapons Masters."

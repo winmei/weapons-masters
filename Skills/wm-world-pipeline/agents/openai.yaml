@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM World Pipeline"
+  short_description: "Export de mapas Godot para Rust"
+  default_prompt: "Use $wm-world-pipeline para criar ou atualizar ferramentas de exportacao de mundo do Godot para o servidor Rust."

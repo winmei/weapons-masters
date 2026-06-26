@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Persistence Auth"
+  short_description: "Auth, PostgreSQL, Redis e JetStream"
+  default_prompt: "Use $wm-persistence-auth para trabalhar em login, sessões e persistência do Weapons Masters."

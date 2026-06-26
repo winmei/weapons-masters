@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Tech Art Audio"
+  short_description: "VFX, audio e feedback performatico"
+  default_prompt: "Use $wm-tech-art-audio para criar feedback visual e sonoro performatico no Weapons Masters."

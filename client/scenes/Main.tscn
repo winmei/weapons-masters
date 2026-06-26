@@ -1,9 +1,11 @@
-[gd_scene load_steps=13 format=3 uid="uid://cxab11x8p623c"]
+[gd_scene load_steps=15 format=3 uid="uid://cxab11x8p623c"]
 
 [ext_resource type="Script" path="res://scripts/Network/NetworkManager.cs" id="1_network"]
 [ext_resource type="Script" path="res://scripts/Network/InputSender.cs" id="2_input"]
 [ext_resource type="Script" path="res://scripts/Network/PacketHandler.cs" id="3_packet"]
 [ext_resource type="Script" path="res://scripts/Prediction/ClientPrediction.cs" id="4_prediction"]
+[ext_resource type="Script" path="res://scripts/Game/MapSetup.cs" id="5_mapsetup"]
+[ext_resource type="Script" path="res://scripts/UI/InventoryPanel.cs" id="6_inventory"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_player"]
 
@@ -47,8 +49,15 @@ LocalHpBarPath = NodePath("../HUD/LocalHpBar")
 RemotePlayersRootPath = NodePath("../RemotePlayers")
 TargetFramePath = NodePath("../HUD/TargetFrame")
 TargetHpBarPath = NodePath("../HUD/TargetHpBar")
+CharacterInfoLabelPath = NodePath("../HUD/CharacterInfoLabel")
+XpLabelPath = NodePath("../HUD/XpLabel")
+XpBarPath = NodePath("../HUD/XpBar")
+InventoryPanelPath = NodePath("../HUD/InventoryPanel")
 
 [node name="RemotePlayers" type="Node3D" parent="."]
+
+[node name="MapSetup" type="Node3D" parent="."]
+script = ExtResource("5_mapsetup")
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_floor")
@@ -117,3 +126,48 @@ offset_bottom = 76.0
 max_value = 200.0
 value = 0.0
 show_percentage = false
+
+[node name="CharacterInfoLabel" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 0.0
+offset_right = 400.0
+offset_bottom = 16.0
+text = ""
+
+[node name="XpLabel" type="Label" parent="HUD"]
+offset_left = 20.0
+offset_top = 84.0
+offset_right = 190.0
+offset_bottom = 100.0
+text = "XP 0/100"
+
+[node name="XpBar" type="ProgressBar" parent="HUD"]
+offset_left = 190.0
+offset_top = 84.0
+offset_right = 390.0
+offset_bottom = 108.0
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="InventoryPanel" type="Panel" parent="HUD"]
+script = ExtResource("6_inventory")
+offset_left = 740.0
+offset_top = 120.0
+offset_right = 1000.0
+offset_bottom = 440.0
+visible = false
+
+[node name="VBox" type="VBoxContainer" parent="HUD/InventoryPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+
+[node name="Title" type="Label" parent="HUD/InventoryPanel/VBox"]
+text = "[ Inventário ]"
+
+[node name="Items" type="ItemList" parent="HUD/InventoryPanel/VBox"]
+size_flags_vertical = 3

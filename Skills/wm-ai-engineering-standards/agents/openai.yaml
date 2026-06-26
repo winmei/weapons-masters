@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM AI Engineering Standards"
+  short_description: "Padroes globais para IA codar melhor"
+  default_prompt: "Use $wm-ai-engineering-standards para desenvolver codigo de alta qualidade no Weapons Masters."

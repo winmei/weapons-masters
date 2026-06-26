@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Godot Client"
+  short_description: "Cliente Godot C#, UI e prediction"
+  default_prompt: "Use $wm-godot-client para evoluir o cliente Godot C# do Weapons Masters."

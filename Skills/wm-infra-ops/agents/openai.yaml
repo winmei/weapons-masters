@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Infra Ops"
+  short_description: "Infra, observabilidade e deploy"
+  default_prompt: "Use $wm-infra-ops para preparar infraestrutura ou observabilidade do Weapons Masters."

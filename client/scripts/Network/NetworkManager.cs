@@ -2,11 +2,16 @@ using Godot;
 using Google.Protobuf;
 using System;
 using System.Text.Json;
+using WeaponsMastersClient.Autoload;
 using WeaponsMastersClient.Prediction;
 using Wm;
 
 namespace WeaponsMastersClient.Network;
 
+/// <summary>
+/// Gerencia a conexão de rede (WebTransport ou WebSocket) e o ciclo de input/snapshot.
+/// O entity_id é atribuído pelo servidor — este nó não gera nem envia IDs locais.
+/// </summary>
 public partial class NetworkManager : Node
 {
     [Export] public string ServerUrl { get; set; } = "https://localhost:4433";
@@ -20,28 +25,22 @@ public partial class NetworkManager : Node
     private PacketHandler? _packetHandler;
     private ClientPrediction? _localPlayer;
     private WebSocketPeer? _webSocketPeer;
-    private uint _localEntityId;
-    private uint _clientTick;
-    private bool _transportWarningShown;
+    private bool _authSent;
 
     public override void _Ready()
     {
-        _inputSender = GetNodeOrNull<InputSender>(InputSenderPath);
+        _inputSender  = GetNodeOrNull<InputSender>(InputSenderPath);
         _packetHandler = GetNodeOrNull<PacketHandler>(PacketHandlerPath);
-        _localPlayer = GetNodeOrNull<ClientPrediction>(LocalPlayerPath);
-        _localEntityId = GenerateEntityId();
+        _localPlayer  = GetNodeOrNull<ClientPrediction>(LocalPlayerPath);
 
-        _inputSender?.SetEntityId(_localEntityId);
-        _packetHandler?.SetLocalEntityId(_localEntityId);
-
-        StartWebTransport();
         StartWebSocketFallback();
+        StartWebTransport();
     }
 
     public override void _Process(double delta)
     {
         PollWebSocketFallback();
-        DrainSnapshots();
+        DrainWebTransportSnapshots();
     }
 
     public override void _PhysicsProcess(double delta)
@@ -51,33 +50,50 @@ public partial class NetworkManager : Node
             return;
         }
 
-        _clientTick++;
+        HandleDodgeInput();
+        HandleSkillInputs();
+        HandleMovementInput();
+    }
+
+    private void HandleDodgeInput()
+    {
+        if (!Input.IsActionJustPressed("dodge") || _inputSender is null || _localPlayer is null)
+        {
+            return;
+        }
+
+        var dodgeInput = _inputSender.CaptureDodgeInput();
+        _localPlayer.ApplyLocalDodge(_inputSender.CurrentDirection);
+        SendInput(dodgeInput.ToByteArray());
+    }
+
+    private void HandleSkillInputs()
+    {
+        if (Input.IsActionJustPressed("skill_golpe"))
+        {
+            TrySendSkillInput(skillId: 1);
+        }
+        if (Input.IsActionJustPressed("skill_disparo"))
+        {
+            TrySendSkillInput(skillId: 2);
+        }
+    }
+
+    private void HandleMovementInput()
+    {
+        if (_inputSender is null || _localPlayer is null)
+        {
+            return;
+        }
 
         if (Input.IsActionJustPressed("target_next"))
         {
             _packetHandler?.SelectNextTarget();
         }
 
-        if (Input.IsActionJustPressed("dodge"))
-        {
-            var dodgeInput = _inputSender.CaptureDodgeInput(_clientTick);
-            _localPlayer.ApplyLocalDodge(_inputSender.CurrentDirection);
-            SendInput(dodgeInput.ToByteArray());
-        }
-
-        if (Input.IsActionJustPressed("skill_golpe"))
-        {
-            SendSkillInput(1);
-        }
-
-        if (Input.IsActionJustPressed("skill_disparo"))
-        {
-            SendSkillInput(2);
-        }
-
-        var input = _inputSender.CaptureMovementInput(_clientTick);
-        _localPlayer.ApplyLocalInput(input);
-        SendInput(input.ToByteArray());
+        var movementInput = _inputSender.CaptureMovementInput();
+        _localPlayer.ApplyLocalInput(movementInput);
+        SendInput(movementInput.ToByteArray());
     }
 
     public void ReceiveSnapshot(byte[] payload)
@@ -91,115 +107,54 @@ public partial class NetworkManager : Node
         _packetHandler.ApplySnapshot(snapshot);
     }
 
-    private void SendInput(byte[] payload)
+    private void TrySendSkillInput(uint skillId)
     {
-        if (!OS.HasFeature("web"))
+        if (_inputSender is null || _packetHandler is null)
         {
-            if (_webSocketPeer?.GetReadyState() == WebSocketPeer.State.Open)
-            {
-                _webSocketPeer.PutPacket(payload);
-            }
-            else if (!_transportWarningShown)
-            {
-                _transportWarningShown = true;
-                GD.PushWarning("WebSocket fallback is not connected yet.");
-            }
-
             return;
         }
-
-        var encodedPayload = JsonSerializer.Serialize(Convert.ToBase64String(payload));
-        JavaScriptBridge.Eval($"window.__wmSendInput && window.__wmSendInput({encodedPayload});", true);
-    }
-
-    private void SendSkillInput(uint skillId)
-    {
-        if (_inputSender is null || _packetHandler is null || _packetHandler.SelectedTargetEntityId == 0)
+        if (_packetHandler.SelectedTargetEntityId == 0)
         {
             return;
         }
 
-        var skillInput = _inputSender.CaptureSkillInput(
-            skillId,
-            _packetHandler.SelectedTargetEntityId,
-            _clientTick
-        );
+        var skillInput = _inputSender.CaptureSkillInput(skillId, _packetHandler.SelectedTargetEntityId);
         SendInput(skillInput.ToByteArray());
     }
 
-    private void StartWebTransport()
+    private void SendInput(byte[] payload)
     {
-        if (!OS.HasFeature("web"))
+        if (OS.HasFeature("web"))
         {
-            return;
+            SendInputViaWebTransport(payload);
         }
+        else
+        {
+            SendInputViaWebSocket(payload);
+        }
+    }
 
-        var encodedUrl = JsonSerializer.Serialize(ServerUrl);
-        var encodedHashBytes = JsonSerializer.Serialize(ServerCertificateHashBytes.Trim());
-        JavaScriptBridge.Eval($$"""
-            (() => {
-                if (window.__wmTransportStarted) return;
+    private void SendInputViaWebSocket(byte[] payload)
+    {
+        if (_webSocketPeer?.GetReadyState() == WebSocketPeer.State.Open)
+        {
+            _webSocketPeer.PutPacket(payload);
+        }
+    }
 
-                window.__wmTransportStarted = true;
-                window.__wmSnapshots = [];
+    private void SendGameAuthPacket()
+    {
+        var token = Session.Instance?.Token ?? "";
+        var authPacket = new GameAuthPacket { Token = token };
+        SendInputViaWebSocket(authPacket.ToByteArray());
+        // Token value intentionally not logged — only its presence is noted.
+        GD.Print($"[NetworkManager] GameAuthPacket sent (authenticated: {token.Length > 0})");
+    }
 
-                const decodeBase64 = (base64) => {
-                    const binary = atob(base64);
-                    const bytes = new Uint8Array(binary.length);
-                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                    return bytes;
-                };
-
-                const encodeBase64 = (bytes) => {
-                    let binary = "";
-                    for (const byte of bytes) binary += String.fromCharCode(byte);
-                    return btoa(binary);
-                };
-
-                window.__wmSendInput = (base64Payload) => {
-                    if (!window.__wmDatagramWriter) return false;
-                    window.__wmDatagramWriter.write(decodeBase64(base64Payload));
-                    return true;
-                };
-
-                window.__wmDrainSnapshots = () => {
-                    const snapshots = window.__wmSnapshots.join("\n");
-                    window.__wmSnapshots.length = 0;
-                    return snapshots;
-                };
-
-                const parseHashBytes = (raw) => {
-                    if (!raw) return null;
-                    const bytes = raw
-                        .replace(/[\[\]\s]/g, "")
-                        .split(",")
-                        .filter(Boolean)
-                        .map((value) => Number(value));
-                    return bytes.length === 32 ? new Uint8Array(bytes) : null;
-                };
-
-                (async () => {
-                    const hashBytes = parseHashBytes({{encodedHashBytes}});
-                    const options = hashBytes
-                        ? { serverCertificateHashes: [{ algorithm: "sha-256", value: hashBytes.buffer }] }
-                        : undefined;
-                    const transport = new WebTransport({{encodedUrl}}, options);
-                    await transport.ready;
-                    window.__wmTransport = transport;
-                    window.__wmDatagramWriter = transport.datagrams.writable.getWriter();
-
-                    const reader = transport.datagrams.readable.getReader();
-                    while (true) {
-                        const result = await reader.read();
-                        if (result.done) break;
-                        window.__wmSnapshots.push(encodeBase64(result.value));
-                    }
-                })().catch((error) => {
-                    window.__wmTransportError = String(error);
-                    console.error(error);
-                });
-            })();
-            """, true);
+    private void SendInputViaWebTransport(byte[] payload)
+    {
+        var encodedPayload = JsonSerializer.Serialize(Convert.ToBase64String(payload));
+        JavaScriptBridge.Eval($"window.__wmSendInput && window.__wmSendInput({encodedPayload});", true);
     }
 
     private void StartWebSocketFallback()
@@ -226,21 +181,90 @@ public partial class NetworkManager : Node
 
         _webSocketPeer.Poll();
 
+        // Send GameAuthPacket as the very first binary packet once the connection is open.
+        // The Gateway validates the JWT and binds the character_id to this entity's ECS slot.
+        if (!_authSent && _webSocketPeer.GetReadyState() == WebSocketPeer.State.Open)
+        {
+            _authSent = true;
+            SendGameAuthPacket();
+        }
+
         while (_webSocketPeer.GetAvailablePacketCount() > 0)
         {
             ReceiveSnapshot(_webSocketPeer.GetPacket());
         }
     }
 
-    private static uint GenerateEntityId()
+    private void StartWebTransport()
     {
-        var timeBits = (uint)Time.GetTicksMsec();
-        var randomBits = (uint)GD.Randi();
-        var entityId = timeBits ^ randomBits;
-        return entityId == 0 ? 1 : entityId;
+        if (!OS.HasFeature("web"))
+        {
+            return;
+        }
+
+        var encodedUrl       = JsonSerializer.Serialize(ServerUrl);
+        var encodedHashBytes = JsonSerializer.Serialize(ServerCertificateHashBytes.Trim());
+
+        JavaScriptBridge.Eval($$"""
+            (() => {
+                if (window.__wmTransportStarted) return;
+                window.__wmTransportStarted = true;
+                window.__wmSnapshots = [];
+
+                const decodeBase64 = (b64) => {
+                    const bin = atob(b64);
+                    const bytes = new Uint8Array(bin.length);
+                    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+                    return bytes;
+                };
+                const encodeBase64 = (bytes) => {
+                    let bin = "";
+                    for (const b of bytes) bin += String.fromCharCode(b);
+                    return btoa(bin);
+                };
+
+                window.__wmSendInput = (b64Payload) => {
+                    if (!window.__wmDatagramWriter) return false;
+                    window.__wmDatagramWriter.write(decodeBase64(b64Payload));
+                    return true;
+                };
+                window.__wmDrainSnapshots = () => {
+                    const snaps = window.__wmSnapshots.join("\n");
+                    window.__wmSnapshots.length = 0;
+                    return snaps;
+                };
+
+                const parseHashBytes = (raw) => {
+                    if (!raw) return null;
+                    const bytes = raw.replace(/[\[\]\s]/g, "").split(",")
+                        .filter(Boolean).map(Number);
+                    return bytes.length === 32 ? new Uint8Array(bytes) : null;
+                };
+
+                (async () => {
+                    const hashBytes = parseHashBytes({{encodedHashBytes}});
+                    const opts = hashBytes
+                        ? { serverCertificateHashes: [{ algorithm: "sha-256", value: hashBytes.buffer }] }
+                        : undefined;
+                    const transport = new WebTransport({{encodedUrl}}, opts);
+                    await transport.ready;
+                    window.__wmTransport = transport;
+                    window.__wmDatagramWriter = transport.datagrams.writable.getWriter();
+                    const reader = transport.datagrams.readable.getReader();
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        window.__wmSnapshots.push(encodeBase64(value));
+                    }
+                })().catch((err) => {
+                    window.__wmTransportError = String(err);
+                    console.error("WebTransport error:", err);
+                });
+            })();
+            """, true);
     }
 
-    private void DrainSnapshots()
+    private void DrainWebTransportSnapshots()
     {
         if (!OS.HasFeature("web"))
         {

@@ -3,6 +3,8 @@ members = [
     "crates/gateway",
     "crates/world",
     "crates/shared",
+    "crates/persistence",
+    "crates/services/auth",
 ]
 resolver = "2"
 
@@ -15,3 +17,11 @@ wtransport = { version = "0.7", features = ["self-signed"] }
 futures-util = "0.3"
 tokio-tungstenite = "0.23"
 bevy_ecs = "0.15"
+async-nats = "0.35"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "json", "macros", "chrono"] }
+redis = { version = "0.25", features = ["tokio-comp", "aio"] }
+thiserror = "1"
+argon2 = "0.5"
+jsonwebtoken = "9"

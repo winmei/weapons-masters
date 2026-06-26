@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Code Reviewer"
+  short_description: "Review senior de MMORPG autoritativo"
+  default_prompt: "Use $wm-code-reviewer para revisar esta mudanca do Weapons Masters."

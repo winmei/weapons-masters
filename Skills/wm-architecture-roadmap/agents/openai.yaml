@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Architecture Roadmap"
+  short_description: "Guia de roadmap jogável do MMORPG"
+  default_prompt: "Use $wm-architecture-roadmap para planejar o próximo step jogável do Weapons Masters."

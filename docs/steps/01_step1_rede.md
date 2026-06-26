@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Status verificado: parcialmente implementado, ainda nao concluido.
+Status verificado: **CONCLUÍDO** (PC nativo via WebSocket). WebTransport para browser bloqueado por limitação externa do Godot 4.7 C#.
 
 Um cubo 3D controlavel no Godot se move em tempo real com posicao autoritativa vinda de um servidor Rust. O servidor aceita:
 

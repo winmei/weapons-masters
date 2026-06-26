@@ -2,6 +2,8 @@
 
 ## Objetivo
 
+**Status: CONCLUÍDO** — código completo em servidor e cliente.
+
 Dois clientes Godot entram no mesmo mundo, selecionam o outro jogador com Tab e usam habilidades hardcoded. O servidor Rust e a unica autoridade para range, line of sight, cooldown, i-frames, dano e morte.
 
 Nao entram neste passo: mobs, progressao, inventario ou PostgreSQL.

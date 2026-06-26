@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM LiveOps Moderation"
+  short_description: "GM tools, moderacao e live events"
+  default_prompt: "Use $wm-liveops-moderation para desenhar ferramentas de GM, moderacao ou eventos ao vivo no Weapons Masters."

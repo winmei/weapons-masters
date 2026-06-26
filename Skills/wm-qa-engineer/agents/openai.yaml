@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM QA Engineer"
+  short_description: "Testes, bots e criterios de pronto"
+  default_prompt: "Use $wm-qa-engineer para criar testes robustos para esta feature do Weapons Masters."

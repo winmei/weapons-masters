@@ -1,0 +1,4 @@
+interface:
+  display_name: "WM Server Gameplay"
+  short_description: "Servidor Rust ECS, combate e mobs"
+  default_prompt: "Use $wm-server-gameplay para implementar gameplay autoritativo no servidor Rust do Weapons Masters."
