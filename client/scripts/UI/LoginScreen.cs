@@ -1,3 +1,4 @@
+#nullable enable
 using Godot;
 using Google.Protobuf;
 using Wm;
@@ -15,11 +16,20 @@ public partial class LoginScreen : Control
     private const string ServerWebSocketUrl = "ws://127.0.0.1:8081";
     private const string MainScenePath = "res://scenes/Main.tscn";
 
-    private LineEdit? _usernameField;
-    private LineEdit? _passwordField;
+    private VBoxContainer? _loginPanel;
+    private VBoxContainer? _registerPanel;
+
+    private LineEdit? _loginUsernameField;
+    private LineEdit? _loginPasswordField;
     private Button? _loginButton;
+    private Button? _goToRegisterButton;
+    private Label? _loginStatusLabel;
+
+    private LineEdit? _registerUsernameField;
+    private LineEdit? _registerPasswordField;
     private Button? _registerButton;
-    private Label? _statusLabel;
+    private Button? _goToLoginButton;
+    private Label? _registerStatusLabel;
 
     private WebSocketPeer? _ws;
     private bool _waitingForResponse;
@@ -30,14 +40,38 @@ public partial class LoginScreen : Control
 
     public override void _Ready()
     {
-        _usernameField = GetNode<LineEdit>("VBox/UsernameField");
-        _passwordField = GetNode<LineEdit>("VBox/PasswordField");
-        _loginButton   = GetNode<Button>("VBox/LoginButton");
-        _registerButton = GetNode<Button>("VBox/RegisterButton");
-        _statusLabel   = GetNode<Label>("VBox/StatusLabel");
+        _loginPanel = GetNode<VBoxContainer>("LoginPanel");
+        _registerPanel = GetNode<VBoxContainer>("RegisterPanel");
 
-        _loginButton.Pressed   += () => BeginAuth(isRegister: false);
+        _loginUsernameField = GetNode<LineEdit>("LoginPanel/UsernameField");
+        _loginPasswordField = GetNode<LineEdit>("LoginPanel/PasswordField");
+        _loginButton = GetNode<Button>("LoginPanel/LoginButton");
+        _goToRegisterButton = GetNode<Button>("LoginPanel/GoToRegisterButton");
+        _loginStatusLabel = GetNode<Label>("LoginPanel/StatusLabel");
+
+        _registerUsernameField = GetNode<LineEdit>("RegisterPanel/UsernameField");
+        _registerPasswordField = GetNode<LineEdit>("RegisterPanel/PasswordField");
+        _registerButton = GetNode<Button>("RegisterPanel/RegisterButton");
+        _goToLoginButton = GetNode<Button>("RegisterPanel/GoToLoginButton");
+        _registerStatusLabel = GetNode<Label>("RegisterPanel/StatusLabel");
+
+        _loginButton.Pressed += () => BeginAuth(isRegister: false);
         _registerButton.Pressed += () => BeginAuth(isRegister: true);
+
+        _goToRegisterButton.Pressed += () => SwitchPanel(showRegister: true);
+        _goToLoginButton.Pressed += () => SwitchPanel(showRegister: false);
+        
+        SwitchPanel(showRegister: false);
+    }
+    
+    private void SwitchPanel(bool showRegister)
+    {
+        if (_loginPanel != null) _loginPanel.Visible = !showRegister;
+        if (_registerPanel != null) _registerPanel.Visible = showRegister;
+        
+        // Clear status labels when switching
+        SetStatus("", false, true);
+        SetStatus("", false, false);
     }
 
     public override void _Process(double delta)
@@ -54,12 +88,15 @@ public partial class LoginScreen : Control
 
     private void BeginAuth(bool isRegister)
     {
-        var username = _usernameField?.Text.Trim() ?? "";
-        var password = _passwordField?.Text ?? "";
+        var username = isRegister ? _registerUsernameField?.Text.Trim() : _loginUsernameField?.Text.Trim();
+        var password = isRegister ? _registerPasswordField?.Text : _loginPasswordField?.Text;
+
+        username ??= "";
+        password ??= "";
 
         if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
         {
-            SetStatus("Preencha username e password.", error: true);
+            SetStatus("Preencha username e password.", error: true, isRegister);
             return;
         }
 
@@ -67,7 +104,7 @@ public partial class LoginScreen : Control
         _pendingUsername = username;
         _pendingPassword = password;
 
-        SetStatus(isRegister ? "Registrando..." : "Conectando...");
+        SetStatus(isRegister ? "Registrando..." : "Conectando...", error: false, isRegister);
         OpenWebSocketConnection();
     }
 
@@ -77,7 +114,7 @@ public partial class LoginScreen : Control
         var error = _ws.ConnectToUrl(ServerWebSocketUrl);
         if (error != Error.Ok)
         {
-            SetStatus($"Falha ao conectar: {error}", error: true);
+            SetStatus($"Falha ao conectar: {error}", error: true, _pendingIsRegister);
             _ws = null;
             return;
         }
@@ -96,14 +133,18 @@ public partial class LoginScreen : Control
         var state = _ws.GetReadyState();
         if (state == WebSocketPeer.State.Open)
         {
+            GD.Print("WebSocket: Connection Open! Sending Auth Request...");
             _connectingBeforeSend = false;
             _waitingForResponse = true;
             SendAuthRequest();
         }
         else if (state == WebSocketPeer.State.Closed)
         {
+            var closeCode = _ws.GetCloseCode();
+            var closeReason = _ws.GetCloseReason();
+            GD.Print($"WebSocket: Connection Closed while connecting! Code={closeCode}, Reason={closeReason}");
             _connectingBeforeSend = false;
-            SetStatus("Servidor indisponível.", error: true);
+            SetStatus($"Servidor indisponível ({closeCode})", error: true, _pendingIsRegister);
             _ws = null;
         }
     }
@@ -115,12 +156,26 @@ public partial class LoginScreen : Control
             return;
         }
 
-        // Mensagens proto distintas evitam o prefixo "REGISTER:" na senha
-        byte[] payload = _pendingIsRegister
+        // Auth gateway protocol: first byte is message type discriminator,
+        // followed by protobuf payload. This prevents decode ambiguity between
+        // LoginRequest and RegisterRequest which share identical field numbers.
+        const byte AuthMsgLogin = 0;
+        const byte AuthMsgRegister = 1;
+
+        byte[] protoPayload = _pendingIsRegister
             ? new RegisterRequest { Username = _pendingUsername, Password = _pendingPassword }.ToByteArray()
             : new LoginRequest    { Username = _pendingUsername, Password = _pendingPassword }.ToByteArray();
 
-        _ws.PutPacket(payload);
+        byte msgType = _pendingIsRegister ? AuthMsgRegister : AuthMsgLogin;
+        byte[] payload = new byte[1 + protoPayload.Length];
+        payload[0] = msgType;
+        protoPayload.CopyTo(payload, 1);
+
+        var err = _ws.PutPacket(payload);
+        if (err != Error.Ok)
+        {
+            GD.PrintErr($"Failed to put packet: {err}");
+        }
     }
 
     private void DrainResponses()
@@ -133,11 +188,15 @@ public partial class LoginScreen : Control
         while (_ws.GetAvailablePacketCount() > 0)
         {
             HandleResponse(_ws.GetPacket());
+            if (!_waitingForResponse) return;
         }
 
-        if (_ws.GetReadyState() == WebSocketPeer.State.Closed)
+        if (_waitingForResponse && _ws.GetReadyState() == WebSocketPeer.State.Closed)
         {
-            SetStatus("Conexão perdida com o servidor.", error: true);
+            var closeCode = _ws.GetCloseCode();
+            var closeReason = _ws.GetCloseReason();
+            GD.Print($"WebSocket: Closed while waiting for response! Code={closeCode}, Reason={closeReason}");
+            SetStatus($"Conexão perdida ({closeCode}): {closeReason}", error: true, _pendingIsRegister);
             _waitingForResponse = false;
         }
     }
@@ -154,7 +213,7 @@ public partial class LoginScreen : Control
         catch (InvalidProtocolBufferException ex)
         {
             GD.PushError($"LoginScreen: invalid response payload — {ex.Message}");
-            SetStatus("Resposta inválida do servidor.", error: true);
+            SetStatus("Resposta inválida do servidor.", error: true, _pendingIsRegister);
             return;
         }
 
@@ -164,24 +223,26 @@ public partial class LoginScreen : Control
             // switching scenes — never log the token value.
             WeaponsMastersClient.Autoload.Session.Instance?.SetLoginData(
                 response.Token,
+                response.RefreshToken,
                 response.Character
             );
-            SetStatus("Login bem-sucedido! Carregando mundo...");
+            SetStatus("Login bem-sucedido! Carregando mundo...", error: false, _pendingIsRegister);
             GetTree().ChangeSceneToFile(MainScenePath);
         }
         else
         {
-            SetStatus($"Erro: {response.ErrorMessage}", error: true);
+            SetStatus($"Erro: {response.ErrorMessage}", error: true, _pendingIsRegister);
         }
     }
 
-    private void SetStatus(string message, bool error = false)
+    private void SetStatus(string message, bool error, bool isRegister)
     {
-        if (_statusLabel is null)
+        var targetLabel = isRegister ? _registerStatusLabel : _loginStatusLabel;
+        if (targetLabel is null)
         {
             return;
         }
-        _statusLabel.Text     = message;
-        _statusLabel.Modulate = error ? Colors.OrangeRed : Colors.White;
+        targetLabel.Text     = message;
+        targetLabel.Modulate = error ? Colors.OrangeRed : Colors.White;
     }
 }

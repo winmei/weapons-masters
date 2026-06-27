@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Godot;
 using WeaponsMastersClient.Autoload;
@@ -41,7 +42,7 @@ public partial class InventoryPanel : Panel
     /// </summary>
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event.IsActionJustPressed("open_inventory"))
+        if (@event.IsActionPressed("open_inventory"))
         {
             Visible = !Visible;
             GetViewport().SetInputAsHandled();

@@ -24,6 +24,10 @@ message WorldSnapshot {
   repeated LevelUpEvent level_up_events = 6;
   repeated LootDrop loot_drops = 7;
   repeated EntityState mob_entities = 8;
+  /// Preenchido pelo Gateway quando Mobile/Web precisa revalidar sessão após handoff.
+  SessionReAuthChallenge session_reauth_challenge = 9;
+  /// Resultado da revalidação via refresh token (Gateway → cliente).
+  SessionReAuthResult session_reauth_result = 10;
 }
 
 message EntityState {
@@ -107,6 +111,18 @@ message LoginResponse {
   string token          = 2;
   string error_message  = 3;
   CharacterData character = 4;
+  string refresh_token  = 5;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  bool success         = 1;
+  string token         = 2;
+  string refresh_token = 3;
+  string error_message = 4;
 }
 
 // Persistência / Progressão
@@ -147,10 +163,40 @@ message LootDrop {
   ItemData item    = 3;
 }
 
-/// Sent by the client as the FIRST binary packet on the game WebSocket (port 8080).
+/// Sent by the client as the FIRST binary packet on the game connection
+/// (WebSocket port 8080 or WebTransport port 4433).
 /// The gateway validates the JWT and forwards a CharacterAssignment to the world.
-/// If the token is invalid or missing, the connection continues as anonymous
-/// (dev/test mode — no persistence writes).
 message GameAuthPacket {
   string token = 1;
+  ClientPlatform client_platform = 2;
+}
+
+/// Client-declared platform for session IP policy (PC strict, Mobile/Web handoff).
+enum ClientPlatform {
+  CLIENT_PLATFORM_UNKNOWN = 0;
+  CLIENT_PLATFORM_PC = 1;
+  CLIENT_PLATFORM_MOBILE = 2;
+  CLIENT_PLATFORM_WEB = 3;
+}
+
+/// Sent during an active ReAuthChallenge (Mobile/Web network handoff).
+/// Submete o refresh token rotativo para revalidar sessão e re-bind de IP.
+message SessionReAuthPacket {
+  reserved 1;
+  reserved "token";
+  string refresh_token = 2;
+}
+
+/// Server→client: solicita revalidação de sessão após mudança de IP (Mobile/Web).
+/// Entregue via `WorldSnapshot.session_reauth_challenge` (Gateway).
+message SessionReAuthChallenge {
+  uint32 deadline_secs = 1;
+}
+
+/// Server→client: tokens rotacionados após revalidação bem-sucedida.
+message SessionReAuthResult {
+  bool success         = 1;
+  string access_token  = 2;
+  string refresh_token = 3;
+  string error_message = 4;
 }

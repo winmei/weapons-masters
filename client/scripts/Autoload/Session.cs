@@ -1,3 +1,4 @@
+#nullable enable
 using Godot;
 using Wm;
 
@@ -5,23 +6,22 @@ namespace WeaponsMastersClient.Autoload;
 
 /// <summary>
 /// Singleton (AutoLoad) que sobrevive a mudanças de cena.
-/// Armazena o JWT e o CharacterData devolvidos pela LoginResponse.
+/// Armazena JWT, refresh token e CharacterData devolvidos pela LoginResponse.
 ///
-/// Regra: o token nunca é logado. O CharacterData é usado para
-/// inicializar o HUD e informar o servidor do character_id real.
+/// Regra: tokens nunca são logados. O CharacterData inicializa HUD e character_id.
 /// </summary>
 public partial class Session : Node
 {
     public static Session Instance { get; private set; } = null!;
 
-    /// JWT recebido na LoginResponse. Enviado no header de reconexão (Step 4).
+    /// JWT de curta duração (15 min). Enviado no GameAuthPacket.
     public string Token { get; private set; } = "";
 
-    /// Dados do personagem carregados do PostgreSQL no login.
-    /// Null se ainda não logado ou se o servidor não enviou CharacterData.
+    /// Refresh token rotativo (7 dias). Usado no ReAuth após handoff de rede.
+    public string RefreshToken { get; private set; } = "";
+
     public CharacterData? Character { get; private set; }
 
-    /// true se o jogador está autenticado e CharacterData foi recebido.
     public bool IsLoggedIn => Character is not null;
 
     public override void _Ready()
@@ -29,17 +29,24 @@ public partial class Session : Node
         Instance = this;
     }
 
-    /// Chamado por LoginScreen ao receber LoginResponse com sucesso.
-    public void SetLoginData(string token, CharacterData? character)
+    public void SetLoginData(string token, string refreshToken, CharacterData? character)
     {
         Token = token;
+        RefreshToken = refreshToken;
         Character = character;
     }
 
-    /// Limpa sessão ao deslogar ou ao retornar à tela de login.
+    /// Atualiza tokens após rotação (refresh endpoint ou SessionReAuthResult).
+    public void UpdateTokens(string accessToken, string refreshToken)
+    {
+        Token = accessToken;
+        RefreshToken = refreshToken;
+    }
+
     public void Clear()
     {
         Token = "";
+        RefreshToken = "";
         Character = null;
     }
 }

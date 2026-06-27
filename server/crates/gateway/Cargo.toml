@@ -12,3 +12,5 @@ prost = { workspace = true }
 wtransport = { workspace = true }
 futures-util = { workspace = true }
 tokio-tungstenite = { workspace = true }
+redis = { workspace = true }
+thiserror = { workspace = true }

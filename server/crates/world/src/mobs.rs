@@ -4,6 +4,7 @@
 
 use bevy_ecs::prelude::*;
 use std::time::{Duration, Instant};
+use crate::components::{StatusEffects, CombatStats};
 
 pub const MOB_AGGRO_RANGE: f32 = 10.0;
 
@@ -166,7 +167,7 @@ pub struct LootEvent {
 #[derive(Clone, Debug)]
 pub struct DroppedItem {
     pub item_id: u32,
-    pub item_name: String,
+    pub item_name: &'static str,
 }
 
 // ---------------------------------------------------------------------------
@@ -183,6 +184,15 @@ pub fn spawn_mob(world: &mut World, def: &'static MobDefinition, x: f32, y: f32)
             MobHealth { current: def.max_hp, max: def.max_hp },
             SpawnPoint { x, y },
             MobState::Idle,
+            StatusEffects::default(),
+            CombatStats {
+                base_attack: def.damage,
+                current_attack: def.damage,
+                base_defense: 0,
+                current_defense: 0,
+                base_speed: def.speed,
+                current_speed: def.speed,
+            },
         ))
         .id();
 
@@ -207,7 +217,7 @@ pub fn spawn_starter_mobs(world: &mut World) {
 /// Copia as posições atuais dos jogadores para `PlayerPositionsSnapshot`.
 /// Deve rodar antes de `mob_ai_system` no schedule.
 pub fn update_player_positions_system(
-    player_query: Query<(&crate::NetworkIdentity, &crate::Position), With<crate::Health>>,
+    player_query: Query<(&crate::NetworkIdentity, &crate::Position), (With<crate::Health>, Without<crate::Disconnected>)>,
     mut snapshot: ResMut<PlayerPositionsSnapshot>,
 ) {
     snapshot.positions.clear();
@@ -224,25 +234,24 @@ pub fn mob_ai_system(
         &mut MobHealth,
         &mut MobState,
         &SpawnPoint,
+        &crate::components::CombatStats,
     )>,
     players: Res<PlayerPositionsSnapshot>,
-    mut rewards: ResMut<RewardEventQueue>,
 ) {
     let now = Instant::now();
     let tick_delta = 1.0f32 / 30.0;
 
-    for (identity, mut position, mut health, mut state, spawn) in query.iter_mut() {
+    for (identity, mut position, health, mut state, spawn, stats) in query.iter_mut() {
         let next_state = compute_mob_state(
             identity,
-            &position,
             health.current,
             &state,
             spawn,
+            stats.current_speed,
             &players.positions,
             now,
             tick_delta,
             &mut position,
-            &mut rewards,
         );
         *state = next_state;
     }
@@ -252,15 +261,14 @@ pub fn mob_ai_system(
 /// manter `mob_ai_system` coeso e facilitar testes unitários.
 fn compute_mob_state(
     identity: &MobIdentity,
-    position: &MobPosition,
     current_hp: i32,
     current_state: &MobState,
     spawn: &SpawnPoint,
+    current_speed: f32,
     player_positions: &[(u32, f32, f32)],
     now: Instant,
     tick_delta: f32,
-    mob_position_mut: &mut MobPosition,
-    rewards: &mut ResMut<RewardEventQueue>,
+    position: &mut MobPosition,
 ) -> MobState {
     if current_hp <= 0 {
         if !matches!(current_state, MobState::Dead { .. }) {
@@ -269,29 +277,28 @@ fn compute_mob_state(
     }
 
     match current_state {
-        MobState::Idle => transition_from_idle(position, player_positions),
+        MobState::Idle => transition_from_idle(&*position, player_positions),
 
         MobState::Aggro { target_entity_id, .. } => {
             transition_from_aggro(
                 identity.def,
-                position,
                 *target_entity_id,
+                current_speed,
                 player_positions,
                 now,
                 tick_delta,
-                mob_position_mut,
+                position,
             )
         }
 
         MobState::Attack { target_entity_id, last_attack_at } => {
             transition_from_attack(
                 identity,
-                position,
+                &*position,
                 *target_entity_id,
                 *last_attack_at,
                 player_positions,
                 now,
-                rewards,
             )
         }
 
@@ -315,12 +322,12 @@ fn transition_from_idle(
 
 fn transition_from_aggro(
     def: &'static MobDefinition,
-    position: &MobPosition,
     target_entity_id: u32,
+    current_speed: f32,
     player_positions: &[(u32, f32, f32)],
     now: Instant,
     tick_delta: f32,
-    mob_position_mut: &mut MobPosition,
+    position: &mut MobPosition,
 ) -> MobState {
     let Some((target_id, target_x, target_y)) = find_player_by_id(player_positions, target_entity_id)
     else {
@@ -338,7 +345,7 @@ fn transition_from_aggro(
         };
     }
 
-    *mob_position_mut = move_toward(position, &target_position, def.speed, tick_delta);
+    *position = move_toward(position, &target_position, current_speed, tick_delta);
     MobState::Aggro { target_entity_id: target_id, target_x, target_y }
 }
 
@@ -349,7 +356,6 @@ fn transition_from_attack(
     last_attack_at: Instant,
     player_positions: &[(u32, f32, f32)],
     now: Instant,
-    rewards: &mut ResMut<RewardEventQueue>,
 ) -> MobState {
     let def = identity.def;
 
@@ -366,7 +372,6 @@ fn transition_from_attack(
     }
 
     if now.duration_since(last_attack_at) >= def.attack_cooldown {
-        register_mob_attack(identity, target_id, now, rewards);
         return MobState::Attack { target_entity_id: target_id, last_attack_at: now };
     }
 
@@ -375,7 +380,7 @@ fn transition_from_attack(
 
 fn transition_from_dead(
     def: &'static MobDefinition,
-    spawn: &SpawnPoint,
+    _spawn: &SpawnPoint,
     died_at: Instant,
     now: Instant,
 ) -> MobState {
@@ -385,26 +390,6 @@ fn transition_from_dead(
     } else {
         MobState::Dead { died_at }
     }
-}
-
-/// Enfileira o ataque do mob para aplicação no sistema de dano de players.
-fn register_mob_attack(
-    identity: &MobIdentity,
-    target_entity_id: u32,
-    attack_time: Instant,
-    rewards: &mut ResMut<RewardEventQueue>,
-) {
-    // Reutilizamos XpEvent como veículo de ataque pendente — em produção
-    // isso seria um tipo dedicado MobAttackEvent. Mantido assim para YAGNI.
-    tracing::debug!(
-        mob_id = identity.mob_id,
-        mob_name = identity.def.name,
-        target_entity_id,
-        damage = identity.def.damage,
-        "mob attacking player"
-    );
-    // O ataque real é consumido por apply_mob_attacks_system no world server
-    let _ = attack_time;
 }
 
 /// Restaura HP e posição de mobs que fizeram transição Dead→Idle neste tick.
@@ -421,31 +406,9 @@ pub fn apply_mob_respawn_system(
     }
 }
 
-/// Coleta ataques de mobs que acabaram de atacar (neste tick) e retorna
-/// (target_entity_id, damage) para aplicação pelo world server.
-pub fn collect_mob_attacks(world: &mut World) -> Vec<(u32, i32)> {
-    let now = Instant::now();
-    let tick_window = Duration::from_millis(40);
-
-    let mut attacks = Vec::new();
-    let mut query = world.query::<(&MobIdentity, &MobState, &MobHealth)>();
-
-    for (identity, state, health) in query.iter(world) {
-        if health.current <= 0 {
-            continue;
-        }
-        if let MobState::Attack { target_entity_id, last_attack_at } = state {
-            if now.duration_since(*last_attack_at) < tick_window {
-                attacks.push((*target_entity_id, identity.def.damage));
-            }
-        }
-    }
-
-    attacks
-}
-
 /// Registra a morte de um mob, emite rewards determinísticos via LCG com seed
 /// baseada no tick + entity index para evitar dependência de rand crate.
+#[allow(dead_code)]
 pub fn handle_mob_death(
     world: &mut World,
     mob_entity: Entity,
@@ -470,10 +433,11 @@ pub fn handle_mob_death(
     enqueue_rewards(world, killer_entity_id, xp_reward, loot_items);
 }
 
+#[allow(dead_code)]
 fn compute_mob_rewards(
     world: &World,
     mob_entity: Entity,
-    killer_entity_id: u32,
+    _killer_entity_id: u32,
     tick: u32,
 ) -> Option<(u32, Vec<DroppedItem>, &'static str)> {
     let identity = world.get::<MobIdentity>(mob_entity)?;
@@ -487,6 +451,7 @@ fn compute_mob_rewards(
     Some((def.xp_reward, loot_items, def.name))
 }
 
+#[allow(dead_code)]
 fn roll_loot(loot_table: &[LootEntry], initial_seed: u64) -> Vec<DroppedItem> {
     roll_loot_impl(loot_table, initial_seed)
 }
@@ -508,7 +473,7 @@ fn roll_loot_impl(loot_table: &[LootEntry], initial_seed: u64) -> Vec<DroppedIte
             if roll <= entry.drop_chance {
                 Some(DroppedItem {
                     item_id: entry.item_id,
-                    item_name: entry.item_name.to_string(),
+                    item_name: entry.item_name,
                 })
             } else {
                 None
@@ -517,6 +482,7 @@ fn roll_loot_impl(loot_table: &[LootEntry], initial_seed: u64) -> Vec<DroppedIte
         .collect()
 }
 
+#[allow(dead_code)]
 fn mark_mob_dead(world: &mut World, mob_entity: Entity) {
     if let Some(mut health) = world.get_mut::<MobHealth>(mob_entity) {
         health.current = 0;
@@ -526,6 +492,7 @@ fn mark_mob_dead(world: &mut World, mob_entity: Entity) {
     }
 }
 
+#[allow(dead_code)]
 fn enqueue_rewards(
     world: &mut World,
     killer_entity_id: u32,
@@ -554,25 +521,18 @@ fn nearest_player_in_range(
     let range_squared = range * range;
     players
         .iter()
-        .filter(|(_, px, py)| {
-            let dx = position.x - px;
-            let dy = position.y - py;
-            dx * dx + dy * dy <= range_squared
+        .filter_map(|p| {
+            let dx = position.x - p.1;
+            let dy = position.y - p.2;
+            let dist_sq = dx * dx + dy * dy;
+            if dist_sq <= range_squared {
+                Some((dist_sq, p))
+            } else {
+                None
+            }
         })
-        .min_by(|(_, ax, ay), (_, bx, by)| {
-            let dist_a = {
-                let dx = position.x - ax;
-                let dy = position.y - ay;
-                dx * dx + dy * dy
-            };
-            let dist_b = {
-                let dx = position.x - bx;
-                let dy = position.y - by;
-                dx * dx + dy * dy
-            };
-            dist_a.partial_cmp(&dist_b).unwrap_or(std::cmp::Ordering::Equal)
-        })
-        .copied()
+        .min_by(|(a, _), (b, _)| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal))
+        .map(|(_, p)| *p)
 }
 
 fn find_player_by_id(
@@ -652,5 +612,15 @@ mod tests {
             next,
             MobState::Aggro { target_entity_id: 42, .. }
         ));
+    }
+
+    #[test]
+    fn dropped_item_name_is_static_str() {
+        let item = DroppedItem { item_id: 2, item_name: "Copper Coin" };
+        // &'static str é Copy — zero-cost clone
+        let item2 = item;
+        assert_eq!(item.item_name, item2.item_name);
+        // Verifica que o nome corresponde à loot table
+        assert!(GOBLIN.loot_table.iter().any(|e| e.item_name == item.item_name));
     }
 }

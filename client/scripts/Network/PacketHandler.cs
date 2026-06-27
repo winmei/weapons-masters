@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using Godot;
@@ -236,7 +237,7 @@ public partial class PacketHandler : Node
     {
         if (_remotePlayersRoot is null || mob.Position is null) return;
 
-        if (mob.CurrentAction == (int)WmEntityAction.Dead)
+        if (mob.CurrentAction == EntityAction.Dead)
         {
             // Hide dead mobs
             if (_mobViews.TryGetValue(mob.EntityId, out var deadView))

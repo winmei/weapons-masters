@@ -20,6 +20,30 @@ services:
     ports: ["4222:4222", "8222:8222"]
     volumes: ["nats_data:/data"]
 
+  world-server:
+    image: rust:slim
+    working_dir: /app/server
+    command: bash -c "apt-get update && apt-get install -y protobuf-compiler pkg-config libssl-dev && cargo run -p world"
+    volumes:
+      - ../:/app
+      - cargo_cache:/usr/local/cargo/registry
+      - cargo_target:/app/server/target
+    ports:
+      - "4433:4433/udp" # WebTransport
+      - "8081:8081"     # Auth / WebSocket
+    environment:
+      - DATABASE_URL=postgres://wm:wm_dev@postgres:5432/weapons_masters
+      - REDIS_URL=redis://redis:6379/
+      - NATS_URL=nats://nats:4222
+      - JWT_SECRET=super_secret_for_dev_only_123456
+      - RUST_LOG=info,gateway=debug,world=debug
+    depends_on:
+      - postgres
+      - redis
+      - nats
+
 volumes:
   pg_data:
   nats_data:
+  cargo_cache:
+  cargo_target:

@@ -17,11 +17,12 @@ use std::sync::Arc;
 
 use prost::Message as ProstMessage;
 use shared::proto::{
-    CharacterData, InventorySlot, ItemData, LoginRequest, LoginResponse, RegisterRequest,
+    CharacterData, InventorySlot, ItemData, LoginRequest, LoginResponse, RefreshTokenRequest,
+    RefreshTokenResponse, RegisterRequest,
 };
 use sqlx::Row;
 
-use auth::{login, register, verify_jwt, SecurityConfig};
+use auth::{bind_session_to_ip, login, refresh_access_token, register, verify_jwt, SecurityConfig};
 use gateway::AuthHandlers;
 
 use crate::CharacterAssignment;
@@ -32,21 +33,11 @@ use crate::CharacterAssignment;
 
 pub struct AuthState {
     pub pg_pool: sqlx::PgPool,
-    pub redis: RedisPool,
+    pub redis: redis::aio::MultiplexedConnection,
     pub config: SecurityConfig,
     /// Pushed after every successful login so the ECS tick loop can bind
     /// the real character_id to the player entity.
     pub char_assign_tx: tokio::sync::mpsc::Sender<CharacterAssignment>,
-}
-
-/// Minimal Redis pool wrapping a single multiplexed connection behind a Mutex.
-/// Sufficient for Step 3 auth volume; Step 4 can upgrade to a real pool.
-pub struct RedisPool(pub Arc<tokio::sync::Mutex<redis::aio::MultiplexedConnection>>);
-
-impl RedisPool {
-    pub async fn get(&self) -> tokio::sync::MutexGuard<'_, redis::aio::MultiplexedConnection> {
-        self.0.lock().await
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -54,15 +45,28 @@ impl RedisPool {
 // ---------------------------------------------------------------------------
 
 pub fn build_auth_handlers(state: Arc<AuthState>) -> Arc<AuthHandlers> {
+    let refresh_state = Arc::clone(&state);
     Arc::new(AuthHandlers {
-        handle: Arc::new(move |is_register: bool, payload: Vec<u8>| {
+        handle: Arc::new({
             let state = Arc::clone(&state);
+            move |is_register: bool, payload: Vec<u8>, origin_ip: std::net::IpAddr| {
+                let state = Arc::clone(&state);
+                Box::pin(async move {
+                    let response = if is_register {
+                        handle_register(state, &payload, origin_ip).await
+                    } else {
+                        handle_login(state, &payload, origin_ip).await
+                    };
+                    let mut buf = Vec::with_capacity(response.encoded_len());
+                    let _ = response.encode(&mut buf);
+                    buf
+                })
+            }
+        }),
+        refresh: Arc::new(move |payload: Vec<u8>, origin_ip: std::net::IpAddr| {
+            let state = Arc::clone(&refresh_state);
             Box::pin(async move {
-                let response = if is_register {
-                    handle_register(state, &payload).await
-                } else {
-                    handle_login(state, &payload).await
-                };
+                let response = handle_refresh(state, &payload, origin_ip).await;
                 let mut buf = Vec::with_capacity(response.encoded_len());
                 let _ = response.encode(&mut buf);
                 buf
@@ -75,7 +79,7 @@ pub fn build_auth_handlers(state: Arc<AuthState>) -> Arc<AuthHandlers> {
 // Auth handlers
 // ---------------------------------------------------------------------------
 
-async fn handle_register(state: Arc<AuthState>, payload: &[u8]) -> LoginResponse {
+async fn handle_register(state: Arc<AuthState>, payload: &[u8], origin_ip: std::net::IpAddr) -> LoginResponse {
     let req = match RegisterRequest::decode(payload) {
         Ok(r) => r,
         Err(e) => {
@@ -86,6 +90,12 @@ async fn handle_register(state: Arc<AuthState>, payload: &[u8]) -> LoginResponse
 
     if req.username.trim().is_empty() || req.password.is_empty() {
         return error_response("username and password are required");
+    }
+    if req.username.chars().count() > 32 || !req.username.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
+        return error_response("username must be 1-32 ASCII alphanumeric characters or underscores");
+    }
+    if req.password.len() < 8 || req.password.len() > 128 {
+        return error_response("password must be 8-128 characters");
     }
 
     match register(&state.pg_pool, &req.username, &req.password).await {
@@ -104,7 +114,7 @@ async fn handle_register(state: Arc<AuthState>, payload: &[u8]) -> LoginResponse
             };
             let mut buf = Vec::with_capacity(login_req.encoded_len());
             let _ = login_req.encode(&mut buf);
-            handle_login(state, &buf).await
+            handle_login(state, &buf, origin_ip).await
         }
         Err(auth::AuthError::UsernameTaken) => error_response("username already taken"),
         Err(e) => {
@@ -114,7 +124,7 @@ async fn handle_register(state: Arc<AuthState>, payload: &[u8]) -> LoginResponse
     }
 }
 
-async fn handle_login(state: Arc<AuthState>, payload: &[u8]) -> LoginResponse {
+async fn handle_login(state: Arc<AuthState>, payload: &[u8], origin_ip: std::net::IpAddr) -> LoginResponse {
     let req = match LoginRequest::decode(payload) {
         Ok(r) => r,
         Err(e) => {
@@ -126,20 +136,23 @@ async fn handle_login(state: Arc<AuthState>, payload: &[u8]) -> LoginResponse {
     if req.username.trim().is_empty() || req.password.is_empty() {
         return error_response("username and password are required");
     }
+    if req.username.chars().count() > 32 || !req.username.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
+        return error_response("invalid username format");
+    }
+    if req.password.len() > 128 {
+        return error_response("password too long");
+    }
 
-    // Step 3: use loopback as origin IP.
-    // Step 4 will thread the real SocketAddr through run_auth_gateway.
-    let origin_ip: std::net::IpAddr = "127.0.0.1".parse().unwrap();
+    // IP real da conexão auth (porta 8081) — vinculado à sessão no Redis.
+    let mut redis_conn = state.redis.clone();
 
-    let mut redis_conn = state.redis.get().await;
-
-    let token = match login(
+    let tokens = match login(
         &state.pg_pool,
         &state.config,
         req.username.clone(),
         req.password,
         origin_ip,
-        &mut *redis_conn,
+        &mut redis_conn,
     )
     .await
     {
@@ -181,38 +194,69 @@ async fn handle_login(state: Arc<AuthState>, payload: &[u8]) -> LoginResponse {
     // can inject it when the game connection arrives (Step 4).  For now, store
     // a "pending assignment" in Redis that the game loop polls.
     let character_id = character_data.character_id;
-    let char_level = character_data.level as u32;
-    let char_exp = character_data.experience as u64;
-    let char_hp = character_data.hp;
-    let char_x = character_data.position_x;
-    let char_y = character_data.position_y;
-
-    // Store pending assignment in Redis: "pending_char:{username}" → character data JSON
-    // The game gateway reads this key on first input packet and pushes the CharacterAssignment.
-    let pending_key = format!("pending_char:{}", req.username);
-    let pending_json = serde_json::json!({
-        "character_id": character_id,
-        "level": char_level,
-        "experience": char_exp,
-        "hp": char_hp,
-        "position_x": char_x,
-        "position_y": char_y,
-    });
-    let _: Result<(), _> = redis::cmd("SET")
-        .arg(&pending_key)
-        .arg(pending_json.to_string())
-        .arg("EX")
-        .arg(300u64) // 5-minute TTL: enough time to open the game connection
-        .query_async(&mut *redis_conn)
-        .await;
-
     tracing::info!(username = %req.username, character_id, "login ok");
     // token value is not logged — only metadata
     LoginResponse {
         success: true,
-        token,
+        token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
         error_message: String::new(),
         character: Some(character_data),
+    }
+}
+
+async fn handle_refresh(
+    state: Arc<AuthState>,
+    payload: &[u8],
+    origin_ip: std::net::IpAddr,
+) -> RefreshTokenResponse {
+    let req = match RefreshTokenRequest::decode(payload) {
+        Ok(r) => r,
+        Err(e) => {
+            tracing::warn!(%e, "handle_refresh: failed to decode payload");
+            return refresh_error_response("invalid request payload");
+        }
+    };
+
+    if req.refresh_token.trim().is_empty() {
+        return refresh_error_response("refresh token is required");
+    }
+
+    let mut redis_conn = state.redis.clone();
+    let tokens = match refresh_access_token(&req.refresh_token, &state.config, &mut redis_conn).await
+    {
+        Ok(t) => t,
+        Err(auth::AuthError::RefreshTokenInvalid) => {
+            return refresh_error_response("invalid or expired refresh token");
+        }
+        Err(auth::AuthError::RefreshTokenReuse) => {
+            return refresh_error_response("session revoked — please log in again");
+        }
+        Err(e) => {
+            tracing::error!(?e, "handle_refresh: unexpected auth error");
+            return refresh_error_response("internal error");
+        }
+    };
+
+    // Re-bind IP da conexão auth após rotação bem-sucedida.
+    if let Ok(claims) = verify_jwt(&tokens.access_token, &state.config) {
+        if let Err(error) = bind_session_to_ip(
+            claims.sub,
+            origin_ip,
+            state.config.jwt_expiry_secs,
+            &mut redis_conn,
+        )
+        .await
+        {
+            tracing::warn!(?error, player_id = claims.sub, %origin_ip, "handle_refresh: session IP re-bind failed");
+        }
+    }
+
+    RefreshTokenResponse {
+        success: true,
+        token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+        error_message: String::new(),
     }
 }
 
@@ -343,8 +387,18 @@ fn error_response(msg: &str) -> LoginResponse {
     LoginResponse {
         success: false,
         token: String::new(),
+        refresh_token: String::new(),
         error_message: msg.to_string(),
         character: None,
+    }
+}
+
+fn refresh_error_response(msg: &str) -> RefreshTokenResponse {
+    RefreshTokenResponse {
+        success: false,
+        token: String::new(),
+        refresh_token: String::new(),
+        error_message: msg.to_string(),
     }
 }
 
@@ -373,11 +427,10 @@ pub async fn init_auth_state(
         .get_multiplexed_tokio_connection()
         .await
         .map_err(InitError::Redis)?;
-    let redis_pool = RedisPool(Arc::new(tokio::sync::Mutex::new(redis_conn)));
 
     Ok(Arc::new(AuthState {
         pg_pool,
-        redis: redis_pool,
+        redis: redis_conn,
         config,
         char_assign_tx,
     }))
@@ -419,7 +472,7 @@ impl std::fmt::Display for InitError {
 /// If the JWT is invalid or the DB query fails, the connection remains
 /// anonymous (no persistence writes for that session — safe degraded mode).
 pub fn build_game_auth_handler(state: Arc<AuthState>) -> Arc<gateway::GameAuthFn> {
-    Arc::new(move |entity_id: u32, token: String| {
+    Arc::new(move |entity_id: u32, token: String, session: gateway::ConnectionSession| {
         let state = Arc::clone(&state);
         Box::pin(async move {
             // Step 1: Validate JWT — never log the token value.
@@ -431,6 +484,26 @@ pub fn build_game_auth_handler(state: Arc<AuthState>) -> Arc<gateway::GameAuthFn
                 }
             };
             let player_id = claims.sub;
+            let game_ip = session.connection_ip();
+
+            // Re-vincula o IP da sessão ao socket de jogo (8080/4433), que é
+            // o IP efetivamente validado em cada pacote recebido.
+            {
+                let mut redis_conn = state.redis.clone();
+                if let Err(error) = bind_session_to_ip(
+                    player_id,
+                    game_ip,
+                    state.config.jwt_expiry_secs,
+                    &mut redis_conn,
+                )
+                .await
+                {
+                    tracing::warn!(?error, entity_id, player_id, %game_ip, "game_auth: failed to bind session IP");
+                    return;
+                }
+            }
+
+            session.bind_player(player_id);
 
             // Step 2: Load character data from PostgreSQL.
             let assignment = match load_character_assignment_by_player_id(
@@ -456,6 +529,111 @@ pub fn build_game_auth_handler(state: Arc<AuthState>) -> Arc<gateway::GameAuthFn
             } else {
                 tracing::info!(entity_id, player_id, character_id, "game_auth: character assignment queued");
             }
+        })
+    })
+}
+
+/// Builds the handler for `SessionReAuthPacket` during Mobile/Web network handoff.
+///
+/// Validates the refresh token, rotates it, re-binds session IP, and returns
+/// new tokens to the client via `SessionReAuthResult`.
+pub fn build_session_reauth_handler(state: Arc<AuthState>) -> Arc<gateway::SessionReAuthFn> {
+    Arc::new(move |refresh_token: String, session: gateway::ConnectionSession| {
+        let state = Arc::clone(&state);
+        Box::pin(async move {
+            let mut redis_conn = state.redis.clone();
+            let tokens = match refresh_access_token(&refresh_token, &state.config, &mut redis_conn).await
+            {
+                Ok(t) => t,
+                Err(auth::AuthError::RefreshTokenInvalid) => {
+                    session
+                        .notify_reauth_result(
+                            false,
+                            String::new(),
+                            String::new(),
+                            "invalid or expired refresh token".to_string(),
+                        );
+                    return;
+                }
+                Err(auth::AuthError::RefreshTokenReuse) => {
+                    session
+                        .notify_reauth_result(
+                            false,
+                            String::new(),
+                            String::new(),
+                            "session revoked — please log in again".to_string(),
+                        );
+                    return;
+                }
+                Err(e) => {
+                    tracing::warn!(?e, "session_reauth: refresh failed");
+                    session
+                        .notify_reauth_result(
+                            false,
+                            String::new(),
+                            String::new(),
+                            "internal error".to_string(),
+                        );
+                    return;
+                }
+            };
+
+            let player_id = match verify_jwt(&tokens.access_token, &state.config) {
+                Ok(c) => c.sub,
+                Err(e) => {
+                    tracing::warn!(%e, "session_reauth: JWT verify failed after refresh");
+                    session
+                        .notify_reauth_result(
+                            false,
+                            String::new(),
+                            String::new(),
+                            "internal error".to_string(),
+                        );
+                    return;
+                }
+            };
+
+            if !session.is_reauth_for_player(player_id) {
+                tracing::warn!(player_id, "session_reauth: no matching ReAuthChallenge");
+                session
+                    .notify_reauth_result(
+                        false,
+                        String::new(),
+                        String::new(),
+                        "no active reauth challenge".to_string(),
+                    );
+                return;
+            }
+
+            let game_ip = session.connection_ip();
+            if let Err(error) = bind_session_to_ip(
+                player_id,
+                game_ip,
+                state.config.jwt_expiry_secs,
+                &mut redis_conn,
+            )
+            .await
+            {
+                tracing::warn!(?error, player_id, %game_ip, "session_reauth: Redis bind failed");
+                session
+                    .notify_reauth_result(
+                        false,
+                        String::new(),
+                        String::new(),
+                        "failed to rebind session IP".to_string(),
+                    );
+                return;
+            }
+
+            session.mark_ip_rebound();
+            session
+                .notify_reauth_result(
+                    true,
+                    tokens.access_token,
+                    tokens.refresh_token,
+                    String::new(),
+                );
+            tracing::info!(player_id, %game_ip, "session_reauth: IP rebound complete");
         })
     })
 }

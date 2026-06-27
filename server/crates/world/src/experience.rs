@@ -17,18 +17,22 @@ impl PlayerProgress {
         (level as u64) * 100
     }
 
-    /// Adiciona XP e sobe de nível se necessário
-    /// Retorna true se subiu de nível
-    pub fn add_xp(&mut self, xp: u32) -> bool {
+    /// Adiciona XP e sobe de nível se necessário.
+    /// Retorna o número de níveis ganhos (pode ser > 1 com XP elevado).
+    pub fn add_xp(&mut self, xp: u32) -> u32 {
         self.experience += xp as u64;
-        let threshold = Self::xp_for_level(self.level.max(1));
-        if self.experience >= threshold {
-            self.experience -= threshold;
-            self.level = (self.level + 1).min(100);
-            true
-        } else {
-            false
+        let mut levels_gained = 0u32;
+        loop {
+            let threshold = Self::xp_for_level(self.level.max(1));
+            if self.experience >= threshold && self.level < 100 {
+                self.experience -= threshold;
+                self.level += 1;
+                levels_gained += 1;
+            } else {
+                break;
+            }
         }
+        levels_gained
     }
 }
 
@@ -64,19 +68,21 @@ pub fn experience_system(
             continue;
         };
 
-        let leveled_up = progress.add_xp(xp_event.xp);
+        let levels_gained = progress.add_xp(xp_event.xp);
         tracing::debug!(
             entity_id = identity.entity_id,
             xp = xp_event.xp,
             new_level = progress.level,
             new_exp = progress.experience,
+            levels_gained,
             "XP added"
         );
 
-        if leveled_up {
+        if levels_gained > 0 {
             tracing::info!(
                 entity_id = identity.entity_id,
                 new_level = progress.level,
+                levels_gained,
                 "LEVEL UP"
             );
             levelup_queue.events.push(LevelUpNotification {

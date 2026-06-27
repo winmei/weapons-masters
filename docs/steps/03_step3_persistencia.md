@@ -371,9 +371,11 @@ mod mob_tests {
 - [x] Crate `persistence`: DB Sync Worker (NATS → PostgreSQL) com `run_db_sync`
 - [x] Crate `services/auth`: registro + login + JWT (sqlx + argon2 + jsonwebtoken)
 - [x] Auth: `verify_password` via `task::spawn_blocking` (não bloquear Tokio)
-- [ ] Refresh token rotativo no Redis (pendente)
+- [x] Refresh token rotativo no Redis (`auth` crate: one-time use + detecção de reuse)
 - [x] IP binding: login vincula IP da sessão no Redis
-- [ ] Gateway: `validate_session_ip()` em cada pacote recebido (pendente — próxima iteração)
+- [x] Gateway: `validate_session_ip()` em cada pacote recebido (`gateway/src/session.rs` + worker Redis em background)
+- [x] Gateway: `GameAuthPacket` no WebTransport (4433/UDP) + `ClientPlatform` no handshake
+- [x] Gateway: notificação proativa `SessionReAuthChallenge` no snapshot (Mobile/Web handoff)
 - [x] Gateway: porta 8081 separada para auth (LoginRequest/RegisterRequest não chegam ao canal de input do jogo)
 - [x] Carregar CharacterData do PG ao logar → enviar ao cliente (auth_service.rs: handle_login + load_character_data)
 - [x] Salvar estado via NATS JetStream a cada 30s (emit_persistence_events_system: SNAPSHOT_INTERVAL_TICKS=900 @ 30Hz)

@@ -1,3 +1,4 @@
+#nullable enable
 using Godot;
 using Wm;
 using WmInputType = Wm.InputType;

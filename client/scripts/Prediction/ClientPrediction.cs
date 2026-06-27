@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Godot;
 using WeaponsMastersClient.Game;
@@ -70,6 +71,12 @@ public partial class ClientPrediction : PlayerController
 
         Hp = hp;
         MaxHp = maxHp;
+
+        if (hp <= 0)
+        {
+            _pendingInputs.Clear();
+            return;
+        }
 
         ReplayPendingInputs();
     }

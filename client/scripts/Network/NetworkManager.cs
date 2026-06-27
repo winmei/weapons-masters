@@ -1,3 +1,4 @@
+#nullable enable
 using Godot;
 using Google.Protobuf;
 using System;
@@ -26,6 +27,7 @@ public partial class NetworkManager : Node
     private ClientPrediction? _localPlayer;
     private WebSocketPeer? _webSocketPeer;
     private bool _authSent;
+    private double _lastReAuthAttemptMs;
 
     public override void _Ready()
     {
@@ -40,6 +42,7 @@ public partial class NetworkManager : Node
     public override void _Process(double delta)
     {
         PollWebSocketFallback();
+        EnsureWebTransportAuthSent();
         DrainWebTransportSnapshots();
     }
 
@@ -98,13 +101,88 @@ public partial class NetworkManager : Node
 
     public void ReceiveSnapshot(byte[] payload)
     {
+        ReceiveServerPacket(payload);
+    }
+
+    private void ReceiveServerPacket(byte[] payload)
+    {
+        WorldSnapshot snapshot;
+        try
+        {
+            snapshot = WorldSnapshot.Parser.ParseFrom(payload);
+        }
+        catch (InvalidProtocolBufferException ex)
+        {
+            GD.PushWarning($"[NetworkManager] Invalid server packet: {ex.Message}");
+            return;
+        }
+
+        if (snapshot.SessionReauthChallenge != null)
+        {
+            HandleSessionReAuthChallenge(snapshot.SessionReauthChallenge.DeadlineSecs);
+        }
+
+        if (snapshot.SessionReauthResult != null)
+        {
+            HandleSessionReAuthResult(snapshot.SessionReauthResult);
+        }
+        else if (_lastReAuthAttemptMs > 0 && HasGameplayState(snapshot))
+        {
+            // ReAuth concluído — servidor parou de anexar o challenge.
+            _lastReAuthAttemptMs = 0;
+            GD.Print("[NetworkManager] Session revalidated — gameplay resumed");
+        }
+
         if (_packetHandler is null)
         {
             return;
         }
 
-        var snapshot = WorldSnapshot.Parser.ParseFrom(payload);
-        _packetHandler.ApplySnapshot(snapshot);
+        if (HasGameplayState(snapshot))
+        {
+            _packetHandler.ApplySnapshot(snapshot);
+        }
+        else if (snapshot.LocalEntityId != 0)
+        {
+            _packetHandler.SetLocalEntityId(snapshot.LocalEntityId);
+        }
+    }
+
+    private static bool HasGameplayState(WorldSnapshot snapshot)
+    {
+        return snapshot.Tick > 0
+            || snapshot.Entities.Count > 0
+            || snapshot.MobEntities.Count > 0
+            || snapshot.CombatEvents.Count > 0
+            || snapshot.LevelUpEvents.Count > 0
+            || snapshot.LootDrops.Count > 0;
+    }
+
+    private void HandleSessionReAuthResult(SessionReAuthResult result)
+    {
+        if (result.Success)
+        {
+            Session.Instance?.UpdateTokens(result.AccessToken, result.RefreshToken);
+            _lastReAuthAttemptMs = 0;
+            GD.Print("[NetworkManager] Session revalidated — tokens rotated");
+            return;
+        }
+
+        GD.PushWarning($"[NetworkManager] Session reauth failed: {result.ErrorMessage}");
+    }
+
+    private void HandleSessionReAuthChallenge(uint deadlineSecs)
+    {
+        var now = Time.GetTicksMsec();
+        // Debounce: snapshots periódicos repetem o challenge enquanto ReAuth está ativo.
+        if (now - _lastReAuthAttemptMs < 2000)
+        {
+            return;
+        }
+
+        _lastReAuthAttemptMs = now;
+        GD.Print($"[NetworkManager] ReAuth challenge — {deadlineSecs}s to revalidate session");
+        SendSessionReAuth();
     }
 
     private void TrySendSkillInput(uint skillId)
@@ -142,13 +220,45 @@ public partial class NetworkManager : Node
         }
     }
 
+    private static ClientPlatform DetectClientPlatform()
+    {
+        if (OS.HasFeature("web"))
+        {
+            return ClientPlatform.Web;
+        }
+        if (OS.HasFeature("mobile") || OS.HasFeature("android") || OS.HasFeature("ios"))
+        {
+            return ClientPlatform.Mobile;
+        }
+        return ClientPlatform.Pc;
+    }
+
     private void SendGameAuthPacket()
     {
         var token = Session.Instance?.Token ?? "";
-        var authPacket = new GameAuthPacket { Token = token };
-        SendInputViaWebSocket(authPacket.ToByteArray());
-        // Token value intentionally not logged — only its presence is noted.
-        GD.Print($"[NetworkManager] GameAuthPacket sent (authenticated: {token.Length > 0})");
+        var authPacket = new GameAuthPacket
+        {
+            Token = token,
+            ClientPlatform = DetectClientPlatform(),
+        };
+        SendInput(authPacket.ToByteArray());
+        GD.Print($"[NetworkManager] GameAuthPacket sent (authenticated: {token.Length > 0}, platform: {authPacket.ClientPlatform})");
+    }
+
+    /// <summary>
+    /// Revalidates session after network handoff (Mobile/Web) using the rotating refresh token.
+    /// </summary>
+    public void SendSessionReAuth()
+    {
+        var refreshToken = Session.Instance?.RefreshToken ?? "";
+        if (refreshToken.Length == 0)
+        {
+            GD.PushWarning("[NetworkManager] SendSessionReAuth: no refresh token available");
+            return;
+        }
+        var reauthPacket = new SessionReAuthPacket { RefreshToken = refreshToken };
+        SendInput(reauthPacket.ToByteArray());
+        GD.Print("[NetworkManager] SessionReAuthPacket sent");
     }
 
     private void SendInputViaWebTransport(byte[] payload)
@@ -182,7 +292,6 @@ public partial class NetworkManager : Node
         _webSocketPeer.Poll();
 
         // Send GameAuthPacket as the very first binary packet once the connection is open.
-        // The Gateway validates the JWT and binds the character_id to this entity's ECS slot.
         if (!_authSent && _webSocketPeer.GetReadyState() == WebSocketPeer.State.Open)
         {
             _authSent = true;
@@ -262,6 +371,27 @@ public partial class NetworkManager : Node
                 });
             })();
             """, true);
+    }
+
+    private void EnsureWebTransportAuthSent()
+    {
+        if (_authSent || !OS.HasFeature("web"))
+        {
+            return;
+        }
+
+        var ready = JavaScriptBridge.Eval(
+            "window.__wmDatagramWriter ? '1' : '0';",
+            true
+        ).AsString();
+
+        if (ready != "1")
+        {
+            return;
+        }
+
+        _authSent = true;
+        SendGameAuthPacket();
     }
 
     private void DrainWebTransportSnapshots()
