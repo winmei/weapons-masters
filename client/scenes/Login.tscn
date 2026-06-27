@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://login_scene"]
+[gd_scene format=3 uid="uid://bu5fds1ba5q5q"]
 
-[ext_resource type="Script" path="res://scripts/UI/LoginScreen.cs" id="1_login"]
+[ext_resource type="Script" uid="uid://d0okrovlj5yuc" path="res://scripts/UI/LoginScreen.cs" id="1_login"]
 
-[node name="Login" type="Control"]
+[node name="Login" type="Control" unique_id=1797335737]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_login")
 
-[node name="LoginPanel" type="VBoxContainer" parent="."]
+[node name="LoginPanel" type="VBoxContainer" parent="." unique_id=1111955157]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -25,37 +25,37 @@ offset_bottom = 140.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Title" type="Label" parent="LoginPanel"]
+[node name="Title" type="Label" parent="LoginPanel" unique_id=263706818]
 layout_mode = 2
 text = "Weapons Masters - Login"
 horizontal_alignment = 1
 
-[node name="UsernameField" type="LineEdit" parent="LoginPanel"]
+[node name="UsernameField" type="LineEdit" parent="LoginPanel" unique_id=1037416051]
 layout_mode = 2
 placeholder_text = "Username"
 
-[node name="PasswordField" type="LineEdit" parent="LoginPanel"]
+[node name="PasswordField" type="LineEdit" parent="LoginPanel" unique_id=98405063]
 layout_mode = 2
 placeholder_text = "Password"
 secret = true
 
-[node name="HSeparator" type="HSeparator" parent="LoginPanel"]
+[node name="HSeparator" type="HSeparator" parent="LoginPanel" unique_id=1453595319]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="LoginButton" type="Button" parent="LoginPanel"]
+[node name="LoginButton" type="Button" parent="LoginPanel" unique_id=145415301]
 layout_mode = 2
 text = "Entrar"
 
-[node name="GoToRegisterButton" type="Button" parent="LoginPanel"]
+[node name="GoToRegisterButton" type="Button" parent="LoginPanel" unique_id=1862626659]
 layout_mode = 2
 text = "Criar nova conta"
 
-[node name="StatusLabel" type="Label" parent="LoginPanel"]
+[node name="StatusLabel" type="Label" parent="LoginPanel" unique_id=678841531]
 layout_mode = 2
 horizontal_alignment = 1
 
-[node name="RegisterPanel" type="VBoxContainer" parent="."]
+[node name="RegisterPanel" type="VBoxContainer" parent="." unique_id=1761685439]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -70,32 +70,32 @@ offset_bottom = 140.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Title" type="Label" parent="RegisterPanel"]
+[node name="Title" type="Label" parent="RegisterPanel" unique_id=670270483]
 layout_mode = 2
 text = "Weapons Masters - Criar Conta"
 horizontal_alignment = 1
 
-[node name="UsernameField" type="LineEdit" parent="RegisterPanel"]
+[node name="UsernameField" type="LineEdit" parent="RegisterPanel" unique_id=550045549]
 layout_mode = 2
 placeholder_text = "Novo Username"
 
-[node name="PasswordField" type="LineEdit" parent="RegisterPanel"]
+[node name="PasswordField" type="LineEdit" parent="RegisterPanel" unique_id=968655079]
 layout_mode = 2
 placeholder_text = "Nova Password"
 secret = true
 
-[node name="HSeparator" type="HSeparator" parent="RegisterPanel"]
+[node name="HSeparator" type="HSeparator" parent="RegisterPanel" unique_id=1682890855]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="RegisterButton" type="Button" parent="RegisterPanel"]
+[node name="RegisterButton" type="Button" parent="RegisterPanel" unique_id=223637353]
 layout_mode = 2
 text = "Registrar"
 
-[node name="GoToLoginButton" type="Button" parent="RegisterPanel"]
+[node name="GoToLoginButton" type="Button" parent="RegisterPanel" unique_id=1791940177]
 layout_mode = 2
 text = "Voltar ao Login"
 
-[node name="StatusLabel" type="Label" parent="RegisterPanel"]
+[node name="StatusLabel" type="Label" parent="RegisterPanel" unique_id=197217731]
 layout_mode = 2
 horizontal_alignment = 1

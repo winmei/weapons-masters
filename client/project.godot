@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Weapons Masters Client"
-run/main_scene="res://scenes/Login.tscn"
+run/main_scene="res://scenes/LoginMMORPG.tscn"
 config/features=PackedStringArray("4.7", "C#")
 
 [dotnet]

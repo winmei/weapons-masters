@@ -40,20 +40,20 @@ public partial class LoginScreen : Control
 
     public override void _Ready()
     {
-        _loginPanel = GetNode<VBoxContainer>("LoginPanel");
-        _registerPanel = GetNode<VBoxContainer>("RegisterPanel");
+        _loginPanel = GetNode<VBoxContainer>("MainLayout/VBox/CenterRow/CenterCol/LoginPanel/Margin/VBox");
+        _registerPanel = GetNode<VBoxContainer>("MainLayout/VBox/CenterRow/CenterCol/RegisterPanel/Margin/VBox");
 
-        _loginUsernameField = GetNode<LineEdit>("LoginPanel/UsernameField");
-        _loginPasswordField = GetNode<LineEdit>("LoginPanel/PasswordField");
-        _loginButton = GetNode<Button>("LoginPanel/LoginButton");
-        _goToRegisterButton = GetNode<Button>("LoginPanel/GoToRegisterButton");
-        _loginStatusLabel = GetNode<Label>("LoginPanel/StatusLabel");
+        _loginUsernameField = GetNode<LineEdit>("MainLayout/VBox/CenterRow/CenterCol/LoginPanel/Margin/VBox/UsernameField");
+        _loginPasswordField = GetNode<LineEdit>("MainLayout/VBox/CenterRow/CenterCol/LoginPanel/Margin/VBox/PasswordField");
+        _loginButton = GetNode<Button>("MainLayout/VBox/CenterRow/CenterCol/LoginPanel/Margin/VBox/LoginButton");
+        _goToRegisterButton = GetNode<Button>("MainLayout/VBox/CenterRow/CenterCol/LoginPanel/Margin/VBox/GoToRegisterButton");
+        _loginStatusLabel = GetNode<Label>("MainLayout/VBox/CenterRow/CenterCol/LoginPanel/Margin/VBox/StatusLabel");
 
-        _registerUsernameField = GetNode<LineEdit>("RegisterPanel/UsernameField");
-        _registerPasswordField = GetNode<LineEdit>("RegisterPanel/PasswordField");
-        _registerButton = GetNode<Button>("RegisterPanel/RegisterButton");
-        _goToLoginButton = GetNode<Button>("RegisterPanel/GoToLoginButton");
-        _registerStatusLabel = GetNode<Label>("RegisterPanel/StatusLabel");
+        _registerUsernameField = GetNode<LineEdit>("MainLayout/VBox/CenterRow/CenterCol/RegisterPanel/Margin/VBox/UsernameField");
+        _registerPasswordField = GetNode<LineEdit>("MainLayout/VBox/CenterRow/CenterCol/RegisterPanel/Margin/VBox/PasswordField");
+        _registerButton = GetNode<Button>("MainLayout/VBox/CenterRow/CenterCol/RegisterPanel/Margin/VBox/RegisterButton");
+        _goToLoginButton = GetNode<Button>("MainLayout/VBox/CenterRow/CenterCol/RegisterPanel/Margin/VBox/GoToLoginButton");
+        _registerStatusLabel = GetNode<Label>("MainLayout/VBox/CenterRow/CenterCol/RegisterPanel/Margin/VBox/StatusLabel");
 
         _loginButton.Pressed += () => BeginAuth(isRegister: false);
         _registerButton.Pressed += () => BeginAuth(isRegister: true);
@@ -66,8 +66,10 @@ public partial class LoginScreen : Control
     
     private void SwitchPanel(bool showRegister)
     {
-        if (_loginPanel != null) _loginPanel.Visible = !showRegister;
-        if (_registerPanel != null) _registerPanel.Visible = showRegister;
+        var loginBase = GetNode<Control>("MainLayout/VBox/CenterRow/CenterCol/LoginPanel");
+        var registerBase = GetNode<Control>("MainLayout/VBox/CenterRow/CenterCol/RegisterPanel");
+        if (loginBase != null) loginBase.Visible = !showRegister;
+        if (registerBase != null) registerBase.Visible = showRegister;
         
         // Clear status labels when switching
         SetStatus("", false, true);
