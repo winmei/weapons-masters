@@ -316,14 +316,16 @@ async fn try_handle_session_reauth(
     session: &ConnectionSession,
     session_reauth: &Option<Arc<SessionReAuthFn>>,
 ) -> bool {
+    // Protobuf decoding is permissive: a regular PlayerInput can decode as an
+    // empty SessionReAuthPacket. Only try that packet shape while a challenge
+    // is actually active, otherwise normal gameplay input gets swallowed.
+    if !session.is_reauth_pending() {
+        return false;
+    }
+
     let Ok(reauth_pkt) = SessionReAuthPacket::decode(payload) else {
         return false;
     };
-
-    if !session.is_reauth_pending() {
-        tracing::warn!("SessionReAuthPacket ignored — no active ReAuthChallenge");
-        return true;
-    }
 
     let refresh_token = if reauth_pkt.refresh_token.is_empty() {
         tracing::warn!("SessionReAuthPacket missing refresh_token");
@@ -343,6 +345,32 @@ async fn try_handle_session_reauth(
         handler(refresh_token, session.clone()).await;
     }
     true
+}
+
+#[cfg(test)]
+mod packet_routing_tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn player_input_is_not_consumed_as_reauth_without_active_challenge() {
+        let session = ConnectionSession::new(
+            "127.0.0.1".parse().unwrap(),
+            ClientType::PC,
+            None,
+            false,
+            None,
+        );
+        let input = PlayerInput {
+            entity_id: 7,
+            sequence: 42,
+            ..Default::default()
+        };
+
+        assert!(
+            !try_handle_session_reauth(&input.encode_to_vec(), &session, &None).await,
+            "regular gameplay input must continue to PlayerInput decoding"
+        );
+    }
 }
 
 async fn handle_incoming_datagram(

@@ -220,11 +220,13 @@ public partial class PacketHandler : Node
             return;
         }
 
+        var created = false;
         if (!_remotePlayers.TryGetValue(entity.EntityId, out var remotePlayer))
         {
             remotePlayer = CreateRemotePlayer(entity.EntityId);
             _remotePlayers[entity.EntityId] = remotePlayer;
             _remotePlayersRoot.AddChild(remotePlayer.Root);
+            created = true;
         }
 
         var targetPosition = new Vector3(entity.Position.X, 0.0f, entity.Position.Y);
@@ -232,7 +234,9 @@ public partial class PacketHandler : Node
         // Interpolação frame-rate independent: alpha = 1 - 0.1^(delta * halfLife)
         // Garante a mesma suavidade a 30fps e a 144fps.
         var lerpAlpha = 1.0f - MathF.Pow(0.1f, _lastFrameDelta * RemotePlayerLerpHalfLife);
-        remotePlayer.Root.GlobalPosition = remotePlayer.Root.GlobalPosition.Lerp(targetPosition, lerpAlpha);
+        remotePlayer.Root.GlobalPosition = created
+            ? targetPosition
+            : remotePlayer.Root.GlobalPosition.Lerp(targetPosition, lerpAlpha);
         remotePlayer.Root.Rotation = new Vector3(0.0f, -entity.Rotation + Mathf.Pi / 2.0f, 0.0f);
         remotePlayer.Hp = entity.Hp;
         remotePlayer.MaxHp = Math.Max(entity.MaxHp, 1);
@@ -258,17 +262,21 @@ public partial class PacketHandler : Node
             return;
         }
 
+        var created = false;
         if (!_mobViews.TryGetValue(mob.EntityId, out var mobView))
         {
             mobView = CreateMobView(mob.EntityId);
             _mobViews[mob.EntityId] = mobView;
             _remotePlayersRoot.AddChild(mobView.Root);
+            created = true;
         }
 
         mobView.Root.Visible = true;
         var lerpAlpha = 1.0f - MathF.Pow(0.1f, _lastFrameDelta * RemotePlayerLerpHalfLife);
         var targetPos = new Vector3(mob.Position.X, 0.0f, mob.Position.Y);
-        mobView.Root.GlobalPosition = mobView.Root.GlobalPosition.Lerp(targetPos, lerpAlpha);
+        mobView.Root.GlobalPosition = created
+            ? targetPos
+            : mobView.Root.GlobalPosition.Lerp(targetPos, lerpAlpha);
         mobView.Hp = mob.Hp;
         mobView.MaxHp = Math.Max(mob.MaxHp, 1);
         mobView.HpLabel.Text = $"{mob.Hp}/{mob.MaxHp}";
@@ -502,7 +510,7 @@ public partial class PacketHandler : Node
     }
 
     /// <summary>
-    /// Creates a mob view — red cube to distinguish from players (orange).
+    /// Creates a compact mob blockout, distinct from players without obscuring the arena.
     /// Goblins, Orcs and Trolls share the same shape for now (Step 3 prototype art).
     /// </summary>
     private static RemotePlayerView CreateMobView(uint mobId)
@@ -512,7 +520,7 @@ public partial class PacketHandler : Node
         var mesh = new MeshInstance3D
         {
             Name = "Cube",
-            Mesh = new BoxMesh(),
+            Mesh = new BoxMesh { Size = new Vector3(0.75f, 1.0f, 0.75f) },
             Position = new Vector3(0.0f, 0.5f, 0.0f)
         };
         mesh.MaterialOverride = new StandardMaterial3D
@@ -526,7 +534,7 @@ public partial class PacketHandler : Node
             Name = "HpLabel",
             Text = "?/?",
             Billboard = BaseMaterial3D.BillboardModeEnum.Enabled,
-            Position = new Vector3(0.0f, 1.4f, 0.0f)
+            Position = new Vector3(0.0f, 1.2f, 0.0f)
         };
         root.AddChild(hpLabel);
 

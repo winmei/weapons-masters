@@ -1,4 +1,4 @@
-use shared::proto::{PlayerInput, WorldSnapshot};
+use shared::proto::PlayerInput;
 use std::sync::Arc;
 use tokio::sync::{broadcast, mpsc};
 
@@ -7,7 +7,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     tracing_subscriber::fmt::init();
 
     let (input_tx, mut input_rx) = mpsc::channel::<PlayerInput>(4096);
-    let (snapshot_tx, _) = broadcast::channel::<Arc<WorldSnapshot>>(128);
+    let (snapshot_tx, _) = broadcast::channel::<Arc<Vec<u8>>>(128);
 
     tokio::spawn(async move {
         while let Some(input) = input_rx.recv().await {

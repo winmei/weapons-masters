@@ -23,11 +23,13 @@ public partial class NetworkManager : Node
     [Export] public NodePath PacketHandlerPath { get; set; } = new("");
     [Export] public NodePath LocalPlayerPath { get; set; } = new("");
     [Export] public NodePath LocalCameraPath { get; set; } = new("");
+    [Export] public NodePath WorldEntryOverlayPath { get; set; } = new("");
 
     private InputSender? _inputSender;
     private PacketHandler? _packetHandler;
     private ClientPrediction? _localPlayer;
     private Camera3D? _localCamera;
+    private Control? _worldEntryOverlay;
     private WebSocketPeer? _webSocketPeer;
     private readonly WorldEntryService _worldEntry = new();
     private bool _authSent;
@@ -42,6 +44,7 @@ public partial class NetworkManager : Node
         _packetHandler = GetNodeOrNull<PacketHandler>(PacketHandlerPath);
         _localPlayer  = GetNodeOrNull<ClientPrediction>(LocalPlayerPath);
         _localCamera  = GetNodeOrNull<Camera3D>(LocalCameraPath);
+        _worldEntryOverlay = GetNodeOrNull<Control>(WorldEntryOverlayPath);
 
         _packetHandler?.ConfigureWorldEntryService(_worldEntry);
         _worldEntry.WorldEntered += OnWorldEntered;
@@ -285,6 +288,11 @@ public partial class NetworkManager : Node
         {
             _localCamera.Current = false;
         }
+
+        if (_worldEntryOverlay is not null)
+        {
+            _worldEntryOverlay.Visible = true;
+        }
     }
 
     private void OnWorldEntered()
@@ -307,6 +315,11 @@ public partial class NetworkManager : Node
         if (_localCamera is not null)
         {
             _localCamera.Current = true;
+        }
+
+        if (_worldEntryOverlay is not null)
+        {
+            _worldEntryOverlay.Visible = false;
         }
 
         ConnectionState = GameConnectionState.InWorld;

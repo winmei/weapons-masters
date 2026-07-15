@@ -30,13 +30,14 @@ services:
       - cargo_target:/app/server/target
     ports:
       - "4433:4433/udp" # WebTransport
+      - "8080:8080"     # Game WebSocket fallback
       - "8081:8081"     # Auth / WebSocket
     environment:
       - DATABASE_URL=postgres://wm:wm_dev@postgres:5432/weapons_masters
       - REDIS_URL=redis://redis:6379/
       - NATS_URL=nats://nats:4222
       - JWT_SECRET=super_secret_for_dev_only_123456
-      - RUST_LOG=info,gateway=debug,world=debug
+      - RUST_LOG=info,gateway=debug
     depends_on:
       - postgres
       - redis

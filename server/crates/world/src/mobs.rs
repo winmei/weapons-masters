@@ -6,7 +6,9 @@ use bevy_ecs::prelude::*;
 use std::time::{Duration, Instant};
 use crate::components::{StatusEffects, CombatStats};
 
-pub const MOB_AGGRO_RANGE: f32 = 10.0;
+/// Keeps the origin as a safe onboarding area. Players engage by approaching
+/// a mob instead of pulling the whole starter pack on world entry.
+pub const MOB_AGGRO_RANGE: f32 = 4.0;
 
 #[derive(Clone, Debug)]
 pub struct MobDefinition {
@@ -201,13 +203,10 @@ pub fn spawn_mob(world: &mut World, def: &'static MobDefinition, x: f32, y: f32)
 }
 
 pub fn spawn_starter_mobs(world: &mut World) {
-    spawn_mob(world, &GOBLIN, -5.0, -3.0);
-    spawn_mob(world, &GOBLIN,  5.0, -3.0);
-    spawn_mob(world, &GOBLIN, -3.0, -6.0);
-    spawn_mob(world, &GOBLIN,  3.0, -6.0);
-    spawn_mob(world, &ORC,   -6.0,  0.0);
-    spawn_mob(world, &ORC,    6.0,  0.0);
-    spawn_mob(world, &TROLL,  0.0, -7.0);
+    spawn_mob(world, &GOBLIN, -5.5, -4.5);
+    spawn_mob(world, &GOBLIN,  5.5, -4.5);
+    spawn_mob(world, &ORC,    -6.0,  3.5);
+    spawn_mob(world, &TROLL,   6.0,  3.5);
 }
 
 // ---------------------------------------------------------------------------
@@ -605,7 +604,7 @@ mod tests {
 
     #[test]
     fn transition_from_idle_aggroes_when_player_in_range() {
-        let players = vec![(42u32, 5.0f32, 0.0f32)];
+        let players = vec![(42u32, 3.0f32, 0.0f32)];
         let mob_position = MobPosition { x: 0.0, y: 0.0 };
         let next = transition_from_idle(&mob_position, &players);
         assert!(matches!(

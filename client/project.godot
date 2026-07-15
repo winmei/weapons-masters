@@ -14,6 +14,10 @@ config/name="Weapons Masters Client"
 run/main_scene="res://scenes/LoginMMORPG.tscn"
 config/features=PackedStringArray("4.7", "C#")
 
+[autoload]
+
+Session="*res://scripts/Autoload/Session.cs"
+
 [dotnet]
 
 project/assembly_name="Weapons Masters Client"
