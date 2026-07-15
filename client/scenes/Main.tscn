@@ -36,6 +36,7 @@ script = ExtResource("1_network")
 InputSenderPath = NodePath("../InputSender")
 PacketHandlerPath = NodePath("../PacketHandler")
 LocalPlayerPath = NodePath("../Player")
+LocalCameraPath = NodePath("../Camera3D")
 
 [node name="InputSender" type="Node" parent="."]
 script = ExtResource("2_input")
@@ -74,6 +75,7 @@ surface_material_override/0 = SubResource("StandardMaterial_wall")
 shape = SubResource("BoxShape_wall")
 
 [node name="Player" type="CharacterBody3D" parent="."]
+visible = false
 script = ExtResource("4_prediction")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
@@ -92,6 +94,7 @@ text = "200/200"
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 7, 7)
+current = false
 
 [node name="HUD" type="CanvasLayer" parent="."]
 

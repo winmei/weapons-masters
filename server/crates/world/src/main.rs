@@ -40,10 +40,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Channel for auth task → ECS world: after login, the auth handler pushes
     // the real character_id so the tick loop can set it on the player entity.
-    let (char_assign_tx, char_assign_rx) =
-        mpsc::channel::<CharacterAssignment>(256);
+    let (enter_world_tx, enter_world_rx) =
+        mpsc::channel::<EnterWorldCommand>(256);
 
-    let auth_state = match auth_service::init_auth_state(char_assign_tx).await {
+    let auth_state = match auth_service::init_auth_state(enter_world_tx).await {
         Ok(s) => {
             tracing::info!("Auth service ready");
             Some(s)
@@ -147,6 +147,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         world.insert_resource(SnapshotSender(snapshot_tx));
         world.insert_resource(GlobalState::default());
         world.insert_resource(EntityIndex::default());
+        world.insert_resource(CharacterEntityIndex::default());
         world.insert_resource(SpatialHash::default());
         world.insert_resource(CombatEventQueue::default());
         world.insert_resource(SnapshotCache::default());
@@ -158,16 +159,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         world.insert_resource(CombatBuffer::default());
         // PersistenceSender: try_send is non-blocking — safe in the hot tick.
         world.insert_resource(PersistenceSenderResource(persistence_tx));
-        // CharacterIdReceiver: drained each tick to bind DB IDs to player entities.
-        world.insert_resource(CharacterIdReceiver(char_assign_rx));
-        world.insert_resource(PendingCharacterAssignments::default());
+        // EnterWorldReceiver: authenticated spawn/restore commands for the ECS.
+        world.insert_resource(EnterWorldReceiver(enter_world_rx));
         mobs::spawn_starter_mobs(&mut world);
 
         let mut schedule = Schedule::default();
         schedule.add_systems(
             (
+                enter_world_system,
                 process_network_inputs_system,
-                apply_character_assignments_system,
                 cleanup_disconnected_system,
                 cleanup_disconnected_timeout_system,
                 apply_movement_and_dodge_system,
@@ -280,6 +280,160 @@ fn sleep_precise(remaining: Duration) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use shared::proto::{combat_event, EntityAction, InputType, Vec2};
+
+    fn make_enter_world_command(entity_id: u32, character_id: i64) -> EnterWorldCommand {
+        EnterWorldCommand {
+            entity_id,
+            character_id,
+            map_id: "starter".to_string(),
+            level: 7,
+            experience: 350,
+            current_hp: 123,
+            maximum_hp: 240,
+            position_x: 12.5,
+            position_y: -4.25,
+            rotation: 1.5,
+        }
+    }
+
+    fn make_world_entry_test_world() -> World {
+        let mut world = World::new();
+        world.insert_resource(EntityIndex::default());
+        world.insert_resource(CharacterEntityIndex::default());
+        world
+    }
+
+    #[test]
+    fn creates_entity_when_authenticated_character_enters_world() {
+        let mut world = make_world_entry_test_world();
+
+        assert!(apply_enter_world_command(
+            &mut world,
+            make_enter_world_command(42, 9001),
+        ));
+
+        let entity = world.resource::<EntityIndex>().map[&42];
+        assert_eq!(world.resource::<CharacterEntityIndex>().map[&9001], entity);
+        assert_eq!(world.get::<CharacterId>(entity).unwrap().value, 9001);
+        assert_eq!(world.get::<WorldMapId>(entity).unwrap().value, "starter");
+        assert_eq!(*world.get::<Position>(entity).unwrap(), Position { x: 12.5, y: -4.25 });
+        assert_eq!(world.get::<Health>(entity).unwrap().current, 123);
+        assert_eq!(world.get::<Health>(entity).unwrap().max, 240);
+        assert_eq!(world.get::<experience::PlayerProgress>(entity).unwrap().level, 7);
+    }
+
+    #[test]
+    fn duplicate_authentication_does_not_create_two_entities() {
+        let mut world = make_world_entry_test_world();
+        let command = make_enter_world_command(42, 9001);
+
+        assert!(apply_enter_world_command(&mut world, command.clone()));
+        let original = world.resource::<EntityIndex>().map[&42];
+        assert!(apply_enter_world_command(&mut world, command));
+
+        assert_eq!(world.resource::<EntityIndex>().map.len(), 1);
+        assert_eq!(world.resource::<CharacterEntityIndex>().map.len(), 1);
+        assert_eq!(world.resource::<EntityIndex>().map[&42], original);
+    }
+
+    #[test]
+    fn reconnect_reuses_entity_and_moves_authority_to_new_entity_id() {
+        let mut world = make_world_entry_test_world();
+        assert!(apply_enter_world_command(
+            &mut world,
+            make_enter_world_command(42, 9001),
+        ));
+        let original = world.resource::<EntityIndex>().map[&42];
+
+        let mut reconnect = make_enter_world_command(77, 9001);
+        reconnect.position_x = 31.0;
+        reconnect.position_y = 9.0;
+        assert!(apply_enter_world_command(&mut world, reconnect));
+
+        assert!(!world.resource::<EntityIndex>().map.contains_key(&42));
+        assert_eq!(world.resource::<EntityIndex>().map[&77], original);
+        assert_eq!(world.get::<NetworkIdentity>(original).unwrap().entity_id, 77);
+        assert_eq!(*world.get::<Position>(original).unwrap(), Position { x: 31.0, y: 9.0 });
+    }
+
+    #[test]
+    fn incompatible_duplicate_world_entry_is_rejected() {
+        let mut world = make_world_entry_test_world();
+        assert!(apply_enter_world_command(
+            &mut world,
+            make_enter_world_command(42, 9001),
+        ));
+
+        assert!(!apply_enter_world_command(
+            &mut world,
+            make_enter_world_command(42, 9002),
+        ));
+
+        let entity = world.resource::<EntityIndex>().map[&42];
+        assert_eq!(world.get::<CharacterId>(entity).unwrap().value, 9001);
+        assert!(!world.resource::<CharacterEntityIndex>().map.contains_key(&9002));
+    }
+
+    #[test]
+    fn world_entry_rejects_invalid_authoritative_identity() {
+        let mut world = make_world_entry_test_world();
+
+        assert!(!apply_enter_world_command(
+            &mut world,
+            make_enter_world_command(0, 9001),
+        ));
+        assert!(!apply_enter_world_command(
+            &mut world,
+            make_enter_world_command(42, 0),
+        ));
+        assert!(world.resource::<EntityIndex>().map.is_empty());
+        assert!(world.resource::<CharacterEntityIndex>().map.is_empty());
+    }
+
+    #[test]
+    fn world_entry_rejects_existing_entity_with_incomplete_components() {
+        let mut world = make_world_entry_test_world();
+        let entity = world.spawn((
+            NetworkIdentity { entity_id: 42 },
+            CharacterId { value: 9001 },
+        )).id();
+        world.resource_mut::<EntityIndex>().map.insert(42, entity);
+        world.resource_mut::<CharacterEntityIndex>().map.insert(9001, entity);
+
+        assert!(!apply_enter_world_command(
+            &mut world,
+            make_enter_world_command(42, 9001),
+        ));
+        assert!(world.get::<Position>(entity).is_none());
+    }
+
+    #[test]
+    fn input_for_nonexistent_entity_does_not_spawn_player() {
+        let mut world = World::new();
+        let (input_tx, input_rx) = mpsc::channel::<PlayerInput>(4);
+        input_tx.try_send(PlayerInput {
+            entity_id: 404,
+            sequence: 1,
+            input_type: InputType::Move as i32,
+            direction: Some(Vec2 { x: 1.0, y: 0.0 }),
+            ..Default::default()
+        }).unwrap();
+
+        world.insert_resource(InputReceiver(input_rx));
+        world.insert_resource(GlobalState::default());
+        world.insert_resource(EntityIndex::default());
+        world.insert_resource(NetworkInputBuffer::default());
+
+        let mut schedule = Schedule::default();
+        schedule.add_systems(process_network_inputs_system);
+        schedule.run(&mut world);
+
+        assert!(world.resource::<EntityIndex>().map.is_empty());
+        assert_eq!(world.resource::<GlobalState>().last_processed_input, 0);
+        let mut identity_query = world.query::<&NetworkIdentity>();
+        assert_eq!(identity_query.iter(&world).count(), 0);
+    }
 
     fn make_spatial_hash() -> SpatialHash {
         SpatialHash::default()
@@ -469,19 +623,9 @@ mod tests {
 
         world.resource_mut::<EntityIndex>().map.insert(99, entity);
 
-        // Roda o sistema de cleanup
-        let mut cmd = Commands::new(&mut world);
-        let query = world.query::<(Entity, &NetworkIdentity, &LastActive)>();
-        let without_disconnected = world.query_filtered::<(Entity, &NetworkIdentity, &LastActive), Without<Disconnected>>();
-
-        for (entity, identity, last_active) in without_disconnected.iter(&world) {
-            if now.duration_since(last_active.at) > PLAYER_INACTIVITY_TIMEOUT {
-                cmd.entity(entity).insert(
-                    Disconnected { since: now, timeout: PLAYER_DISCONNECT_GRACE },
-                );
-            }
-        }
-        cmd.apply(&mut world);
+        let mut schedule = Schedule::default();
+        schedule.add_systems(cleanup_disconnected_system);
+        schedule.run(&mut world);
 
         // Verifica que Disconnected foi inserido
         assert!(world.get::<Disconnected>(entity).is_some());
@@ -500,11 +644,9 @@ mod tests {
         )).id();
 
         // Simula cleanup_disconnected_system — NÃO insere PvPImmune
-        let mut cmd = Commands::new(&mut world);
-        cmd.entity(entity).insert(
+        world.entity_mut(entity).insert(
             Disconnected { since: Instant::now(), timeout: PLAYER_DISCONNECT_GRACE },
         );
-        cmd.apply(&mut world);
 
         assert!(world.get::<Disconnected>(entity).is_some());
         assert!(world.get::<PvPImmune>(entity).is_none());
@@ -536,10 +678,12 @@ mod tests {
 
     #[test]
     fn try_consume_skill_returns_none_on_cooldown() {
-        let mut cs = CombatState::new(Instant::now());
+        let now = Instant::now();
+        let mut cs = CombatState::new(now);
+        cs.cooldowns.insert(1, now);
         cs.pending_skill = Some((1, 100)); // GOLPE targeting entity 100
         // Cooldown não expirou (acabou de ser criado)
-        assert!(try_consume_skill(&mut cs, Instant::now()).is_none());
+        assert!(try_consume_skill(&mut cs, now).is_none());
         // pending_skill foi limpo mesmo quando cooldown ativo
         assert!(cs.pending_skill.is_none());
     }

@@ -28,6 +28,11 @@ pub struct EntityIndex {
 }
 
 #[derive(Resource, Default)]
+pub struct CharacterEntityIndex {
+    pub map: HashMap<i64, Entity>,
+}
+
+#[derive(Resource, Default)]
 pub struct CombatEventQueue {
     pub events: Vec<CombatEvent>,
 }
@@ -55,31 +60,24 @@ pub struct NetworkInputBuffer {
 #[derive(Resource)]
 pub struct PersistenceSenderResource(pub publisher::PersistenceSender);
 
-/// Receives (entity_id, character_id, player_progress) assignments from the
-/// auth task after a successful login. Drained each tick in process_network_inputs_system.
+/// Receives commands emitted after game authentication and character loading.
 #[derive(Resource)]
-pub struct CharacterIdReceiver(pub mpsc::Receiver<CharacterAssignment>);
+pub struct EnterWorldReceiver(pub mpsc::Receiver<EnterWorldCommand>);
 
-/// Holds `CharacterAssignment`s that arrived before the player entity was
-/// created in the ECS (i.e., before the first `PlayerInput` from that connection).
-///
-/// `apply_character_assignments_system` retries these each tick until the
-/// entity appears (created by `process_network_inputs_system`).
-#[derive(Resource, Default)]
-pub struct PendingCharacterAssignments {
-    pub pending: std::collections::HashMap<u32, CharacterAssignment>,
-}
-
-/// Sent by the auth task to set the DB character on an existing ECS player entity.
-pub struct CharacterAssignment {
+/// Complete authoritative state required to create or restore a player entity.
+#[derive(Debug, Clone)]
+pub struct EnterWorldCommand {
     pub entity_id: u32,
     pub character_id: i64,
+    pub map_id: String,
     pub level: u32,
     pub experience: u64,
-    pub hp: i32,
+    pub current_hp: i32,
+    pub maximum_hp: i32,
     pub position_x: f32,
     pub position_y: f32,
+    pub rotation: f32,
 }
 
-/// Sender side — cloned into the auth state so auth handlers can push assignments.
-pub type CharacterAssignmentSender = mpsc::Sender<CharacterAssignment>;
+/// Sender side cloned into the authentication state.
+pub type EnterWorldSender = mpsc::Sender<EnterWorldCommand>;

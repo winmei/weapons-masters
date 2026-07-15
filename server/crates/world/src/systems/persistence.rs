@@ -1,5 +1,5 @@
 use bevy_ecs::prelude::*;
-use crate::components::{CharacterId, Health, NetworkIdentity, Position};
+use crate::components::{CharacterId, Health, NetworkIdentity, Position, WorldMapId};
 use crate::resources::{EntityIndex, GlobalState, PersistenceSenderResource};
 use crate::publisher;
 use crate::constants::SNAPSHOT_INTERVAL_TICKS;
@@ -12,7 +12,14 @@ pub fn emit_persistence_events_system(
     levelup_queue: Res<experience::LevelUpEventQueue>,
     reward_queue: Res<mobs::RewardEventQueue>,
     entity_index: Res<EntityIndex>,
-    player_query: Query<(&NetworkIdentity, &Position, &Health, &experience::PlayerProgress, &CharacterId)>,
+    player_query: Query<(
+        &NetworkIdentity,
+        &Position,
+        &Health,
+        &experience::PlayerProgress,
+        &CharacterId,
+        &WorldMapId,
+    )>,
 ) {
     use publisher::{CharacterSnapshotData, LevelUpEventData, LootDropEventData, PersistenceEvent};
 
@@ -78,7 +85,7 @@ pub fn emit_persistence_events_system(
     }
 
     if global_state.tick % SNAPSHOT_INTERVAL_TICKS == 0 && global_state.tick > 0 {
-        for (identity, position, health, progress, char_id) in player_query.iter() {
+        for (identity, position, health, progress, char_id, map_id) in player_query.iter() {
             if char_id.value == 0 {
                 continue;
             }
@@ -91,7 +98,7 @@ pub fn emit_persistence_events_system(
                 max_hp: health.max,
                 position_x: position.x,
                 position_y: position.y,
-                position_map: "starter".to_string(),
+                position_map: map_id.value.clone(),
             }));
             let _ = identity;
         }
@@ -100,13 +107,20 @@ pub fn emit_persistence_events_system(
 
 pub fn find_character_id(
     entity_index: &EntityIndex,
-    player_query: &Query<(&NetworkIdentity, &Position, &Health, &experience::PlayerProgress, &CharacterId)>,
+    player_query: &Query<(
+        &NetworkIdentity,
+        &Position,
+        &Health,
+        &experience::PlayerProgress,
+        &CharacterId,
+        &WorldMapId,
+    )>,
     entity_id: u32,
 ) -> i64 {
     let Some(&entity) = entity_index.map.get(&entity_id) else {
         return 0;
     };
-    let Ok((_, _, _, _, char_id)) = player_query.get(entity) else {
+    let Ok((_, _, _, _, char_id, _)) = player_query.get(entity) else {
         return 0;
     };
     char_id.value
@@ -115,13 +129,18 @@ pub fn find_character_id(
 pub fn flush_all_players_on_shutdown(world: &mut World) {
     use publisher::{CharacterSnapshotData, PersistenceEvent};
 
-    let mut q = world
-        .query::<(&Position, &Health, &experience::PlayerProgress, &CharacterId)>();
+    let mut q = world.query::<(
+        &Position,
+        &Health,
+        &experience::PlayerProgress,
+        &CharacterId,
+        &WorldMapId,
+    )>();
 
     let snapshots: Vec<CharacterSnapshotData> = q
         .iter(world)
-        .filter(|(_, _, _, char_id)| char_id.value != 0)
-        .map(|(pos, health, progress, char_id)| CharacterSnapshotData {
+        .filter(|(_, _, _, char_id, _)| char_id.value != 0)
+        .map(|(pos, health, progress, char_id, map_id)| CharacterSnapshotData {
             character_id: char_id.value,
             player_id:    char_id.value,
             level:        progress.level as i32,
@@ -130,7 +149,7 @@ pub fn flush_all_players_on_shutdown(world: &mut World) {
             max_hp:       health.max,
             position_x:   pos.x,
             position_y:   pos.y,
-            position_map: "starter".to_string(),
+            position_map: map_id.value.clone(),
         })
         .collect();
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 using WeaponsMastersClient.Autoload;
+using WeaponsMastersClient.Game;
 using WeaponsMastersClient.UI;
 using WeaponsMastersClient.Prediction;
 using Wm;
@@ -48,6 +49,7 @@ public partial class PacketHandler : Node
     private Label? _targetFrame;
     private ProgressBar? _targetHpBar;
     private uint _selectedTargetEntityId;
+    private WorldEntryService? _worldEntry;
 
     // Último delta de frame disponível para uso em sistemas que não recebem delta diretamente
     private float _lastFrameDelta = 1.0f / 60.0f;
@@ -87,6 +89,11 @@ public partial class PacketHandler : Node
     public void SetLocalEntityId(uint entityId)
     {
         LocalEntityId = entityId;
+    }
+
+    public void ConfigureWorldEntryService(WorldEntryService worldEntry)
+    {
+        _worldEntry = worldEntry ?? throw new ArgumentNullException(nameof(worldEntry));
     }
 
     public void SelectNextTarget()
@@ -143,6 +150,10 @@ public partial class PacketHandler : Node
             if (entity.EntityId == LocalEntityId)
             {
                 ReconcileLocalPlayer(entity);
+                if (_worldEntry is not null && !_worldEntry.IsReady)
+                {
+                    _worldEntry.ConfirmSpawn();
+                }
             }
             else
             {

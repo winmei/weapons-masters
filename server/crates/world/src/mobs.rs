@@ -618,7 +618,7 @@ mod tests {
     fn dropped_item_name_is_static_str() {
         let item = DroppedItem { item_id: 2, item_name: "Copper Coin" };
         // &'static str é Copy — zero-cost clone
-        let item2 = item;
+        let item2 = item.clone();
         assert_eq!(item.item_name, item2.item_name);
         // Verifica que o nome corresponde à loot table
         assert!(GOBLIN.loot_table.iter().any(|e| e.item_name == item.item_name));

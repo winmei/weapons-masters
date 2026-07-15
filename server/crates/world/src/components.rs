@@ -14,6 +14,11 @@ pub struct CharacterId {
     pub value: i64,
 }
 
+#[derive(Component, Clone, Debug, Default, PartialEq, Eq)]
+pub struct WorldMapId {
+    pub value: String,
+}
+
 #[derive(Component, Clone, Copy, Debug, Default, PartialEq)]
 pub struct Position {
     pub x: f32,

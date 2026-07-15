@@ -4,6 +4,7 @@ using Google.Protobuf;
 using System;
 using System.Text.Json;
 using WeaponsMastersClient.Autoload;
+using WeaponsMastersClient.Game;
 using WeaponsMastersClient.Prediction;
 using Wm;
 
@@ -21,19 +22,31 @@ public partial class NetworkManager : Node
     [Export] public NodePath InputSenderPath { get; set; } = new("");
     [Export] public NodePath PacketHandlerPath { get; set; } = new("");
     [Export] public NodePath LocalPlayerPath { get; set; } = new("");
+    [Export] public NodePath LocalCameraPath { get; set; } = new("");
 
     private InputSender? _inputSender;
     private PacketHandler? _packetHandler;
     private ClientPrediction? _localPlayer;
+    private Camera3D? _localCamera;
     private WebSocketPeer? _webSocketPeer;
+    private readonly WorldEntryService _worldEntry = new();
     private bool _authSent;
     private double _lastReAuthAttemptMs;
+
+    public GameConnectionState ConnectionState { get; private set; } =
+        GameConnectionState.Disconnected;
 
     public override void _Ready()
     {
         _inputSender  = GetNodeOrNull<InputSender>(InputSenderPath);
         _packetHandler = GetNodeOrNull<PacketHandler>(PacketHandlerPath);
         _localPlayer  = GetNodeOrNull<ClientPrediction>(LocalPlayerPath);
+        _localCamera  = GetNodeOrNull<Camera3D>(LocalCameraPath);
+
+        _packetHandler?.ConfigureWorldEntryService(_worldEntry);
+        _worldEntry.WorldEntered += OnWorldEntered;
+        LockLocalPlayerUntilWorldEntry();
+        ConnectionState = GameConnectionState.Connecting;
 
         StartWebSocketFallback();
         StartWebTransport();
@@ -48,7 +61,10 @@ public partial class NetworkManager : Node
 
     public override void _PhysicsProcess(double delta)
     {
-        if (_inputSender is null || _localPlayer is null)
+        if (ConnectionState != GameConnectionState.InWorld
+            || !_worldEntry.IsReady
+            || _inputSender is null
+            || _localPlayer is null)
         {
             return;
         }
@@ -241,8 +257,67 @@ public partial class NetworkManager : Node
             Token = token,
             ClientPlatform = DetectClientPlatform(),
         };
+        ConnectionState = GameConnectionState.Authenticating;
         SendInput(authPacket.ToByteArray());
+        _worldEntry.AuthenticationSent();
+        ConnectionState = GameConnectionState.WaitingForWorld;
         GD.Print($"[NetworkManager] GameAuthPacket sent (authenticated: {token.Length > 0}, platform: {authPacket.ClientPlatform})");
+    }
+
+    private void LockLocalPlayerUntilWorldEntry()
+    {
+        SetPhysicsProcess(false);
+
+        if (_localPlayer is not null)
+        {
+            _localPlayer.Visible = false;
+            _localPlayer.SetProcess(false);
+            _localPlayer.SetPhysicsProcess(false);
+        }
+
+        if (_inputSender is not null)
+        {
+            _inputSender.SetProcess(false);
+            _inputSender.SetPhysicsProcess(false);
+        }
+
+        if (_localCamera is not null)
+        {
+            _localCamera.Current = false;
+        }
+    }
+
+    private void OnWorldEntered()
+    {
+        // PacketHandler applies authoritative transform/health before raising
+        // this event. Only then may the player become visible and interactive.
+        if (_localPlayer is not null)
+        {
+            _localPlayer.Visible = true;
+            _localPlayer.SetProcess(true);
+            _localPlayer.SetPhysicsProcess(true);
+        }
+
+        if (_inputSender is not null)
+        {
+            _inputSender.SetProcess(true);
+            _inputSender.SetPhysicsProcess(true);
+        }
+
+        if (_localCamera is not null)
+        {
+            _localCamera.Current = true;
+        }
+
+        ConnectionState = GameConnectionState.InWorld;
+        SetPhysicsProcess(true);
+        GD.Print("[NetworkManager] Authoritative world entry confirmed; input enabled");
+    }
+
+    public override void _ExitTree()
+    {
+        _worldEntry.WorldEntered -= OnWorldEntered;
+        ConnectionState = GameConnectionState.Disconnected;
     }
 
     /// <summary>

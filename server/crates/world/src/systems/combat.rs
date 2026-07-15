@@ -188,7 +188,7 @@ fn peek_skill(combat_state: &CombatState) -> Option<(u32, u32)> {
     combat_state.pending_skill
 }
 
-fn try_consume_skill(
+pub(crate) fn try_consume_skill(
     combat_state: &mut CombatState,
     now: Instant,
 ) -> Option<(u32, u32, SkillDef)> {

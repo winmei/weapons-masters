@@ -511,7 +511,7 @@ async fn handle_websocket_connection(
 
     // The client sends GameAuthPacket as the very first binary packet if logged
     // in. The handler validates the JWT, loads CharacterData from PG, and pushes
-    // a CharacterAssignment to the world. Subsequent packets are always PlayerInput.
+    // an authenticated enter-world command to the world. Subsequent packets are PlayerInput.
     let mut first_packet = true;
 
     loop {

@@ -3,9 +3,8 @@
 //! Bridges `gateway::run_auth_gateway` with the real `auth` crate.
 //! After a successful login:
 //!   1. Returns `LoginResponse` with full `CharacterData` to the client.
-//!   2. Pushes a `CharacterAssignment` onto the ECS channel so the game loop
-//!      applies the real DB character_id, position and progress to the player
-//!      entity — fixing the surrogate bug that caused zero persistence writes.
+//!   2. The game connection validates that token and pushes an
+//!      `EnterWorldCommand` containing the persisted character state.
 //!
 //! Per `$wm-persistence-auth`:
 //! - JWT_SECRET mandatory and strong, read from env.
@@ -25,7 +24,7 @@ use sqlx::Row;
 use auth::{bind_session_to_ip, login, refresh_access_token, register, verify_jwt, SecurityConfig};
 use gateway::AuthHandlers;
 
-use crate::CharacterAssignment;
+use crate::EnterWorldCommand;
 
 // ---------------------------------------------------------------------------
 // Auth state
@@ -37,7 +36,7 @@ pub struct AuthState {
     pub config: SecurityConfig,
     /// Pushed after every successful login so the ECS tick loop can bind
     /// the real character_id to the player entity.
-    pub char_assign_tx: tokio::sync::mpsc::Sender<CharacterAssignment>,
+    pub enter_world_tx: tokio::sync::mpsc::Sender<EnterWorldCommand>,
 }
 
 // ---------------------------------------------------------------------------
@@ -179,20 +178,8 @@ async fn handle_login(state: Arc<AuthState>, payload: &[u8], origin_ip: std::net
         }
     };
 
-    // The entity_id assigned by the gateway is not known here — it's assigned
-    // per-connection on the WebSocket/WebTransport side.  We push the assignment
-    // with entity_id = 0 as a sentinel; `apply_character_assignments_system`
-    // will match by the character_id on the next tick when the entity registers.
-    //
-    // Better approach used here: push with a NATS subject so the ECS system can
-    // match by username. But for Step 3 simplicity: the auth port (8081) is
-    // one-shot per connection.  The client opens 8081 to auth, then opens 8080
-    // to play.  The entity on 8080 is created on first input.  We need a way
-    // to correlate them.
-    //
-    // Solution: store character_id in Redis keyed by username so the gateway
-    // can inject it when the game connection arrives (Step 4).  For now, store
-    // a "pending assignment" in Redis that the game loop polls.
+    // The game gateway assigns entity_id on the subsequent game connection.
+    // GameAuthPacket correlates this login token with the selected character.
     let character_id = character_data.character_id;
     tracing::info!(username = %req.username, character_id, "login ok");
     // token value is not logged — only metadata
@@ -407,7 +394,7 @@ fn refresh_error_response(msg: &str) -> RefreshTokenResponse {
 // ---------------------------------------------------------------------------
 
 pub async fn init_auth_state(
-    char_assign_tx: tokio::sync::mpsc::Sender<CharacterAssignment>,
+    enter_world_tx: tokio::sync::mpsc::Sender<EnterWorldCommand>,
 ) -> Result<Arc<AuthState>, InitError> {
     let config = SecurityConfig::from_env().map_err(InitError::Config)?;
 
@@ -432,7 +419,7 @@ pub async fn init_auth_state(
         pg_pool,
         redis: redis_conn,
         config,
-        char_assign_tx,
+        enter_world_tx,
     }))
 }
 
@@ -466,8 +453,8 @@ impl std::fmt::Display for InitError {
 /// This handler:
 ///   1. Validates the JWT → extracts `player_id` (sub claim).
 ///   2. Loads the player's character row from PostgreSQL.
-///   3. Pushes a `CharacterAssignment` to the ECS channel so the tick loop
-///      can apply the real character_id, position, and progress to the entity.
+///   3. Pushes an `EnterWorldCommand` so the tick loop creates or restores the
+///      entity before any movement input is accepted.
 ///
 /// If the JWT is invalid or the DB query fails, the connection remains
 /// anonymous (no persistence writes for that session — safe degraded mode).
@@ -506,7 +493,7 @@ pub fn build_game_auth_handler(state: Arc<AuthState>) -> Arc<gateway::GameAuthFn
             session.bind_player(player_id);
 
             // Step 2: Load character data from PostgreSQL.
-            let assignment = match load_character_assignment_by_player_id(
+            let enter_world = match load_enter_world_command_by_player_id(
                 &state.pg_pool,
                 player_id,
                 entity_id,
@@ -520,14 +507,14 @@ pub fn build_game_auth_handler(state: Arc<AuthState>) -> Arc<gateway::GameAuthFn
                 }
             };
 
-            let character_id = assignment.character_id;
+            let character_id = enter_world.character_id;
 
             // Step 3: Push assignment to the ECS channel.
             // The game tick loop will apply it to the player entity.
-            if state.char_assign_tx.send(assignment).await.is_err() {
-                tracing::warn!(entity_id, player_id, "game_auth: assignment channel closed");
+            if state.enter_world_tx.send(enter_world).await.is_err() {
+                tracing::warn!(entity_id, player_id, "game_auth: enter-world channel closed");
             } else {
-                tracing::info!(entity_id, player_id, character_id, "game_auth: character assignment queued");
+                tracing::info!(entity_id, player_id, character_id, "game_auth: enter-world command queued");
             }
         })
     })
@@ -638,21 +625,21 @@ pub fn build_session_reauth_handler(state: Arc<AuthState>) -> Arc<gateway::Sessi
     })
 }
 
-/// Loads the minimal character fields needed for `CharacterAssignment`.
+/// Loads the persisted character fields needed for `EnterWorldCommand`.
 /// Does not load inventory — the client already received the full `CharacterData`
 /// in `LoginResponse`.
-async fn load_character_assignment_by_player_id(
+async fn load_enter_world_command_by_player_id(
     pool: &sqlx::PgPool,
     player_id: i64,
     entity_id: u32,
-) -> Result<crate::CharacterAssignment, sqlx::Error> {
+) -> Result<crate::EnterWorldCommand, sqlx::Error> {
     use sqlx::Row;
 
     let row = sqlx::query(
         r#"
         SELECT id AS character_id,
                level, experience, hp, max_hp,
-               position_x, position_y
+               position_x, position_y, position_map
         FROM player_characters
         WHERE player_id = $1
         ORDER BY id ASC
@@ -667,16 +654,21 @@ async fn load_character_assignment_by_player_id(
     let level: i32        = row.try_get("level")?;
     let experience: i64   = row.try_get("experience")?;
     let hp: i32           = row.try_get("hp")?;
+    let max_hp: i32       = row.try_get("max_hp")?;
     let position_x: f32   = row.try_get("position_x")?;
     let position_y: f32   = row.try_get("position_y")?;
+    let position_map: String = row.try_get("position_map")?;
 
-    Ok(crate::CharacterAssignment {
+    Ok(crate::EnterWorldCommand {
         entity_id,
         character_id,
+        map_id: position_map,
         level: level as u32,
         experience: experience as u64,
-        hp,
+        current_hp: hp,
+        maximum_hp: max_hp,
         position_x,
         position_y,
+        rotation: 0.0,
     })
 }
