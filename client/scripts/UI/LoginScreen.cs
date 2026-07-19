@@ -14,7 +14,7 @@ namespace WeaponsMastersClient.UI;
 public partial class LoginScreen : Control
 {
     private const string ServerWebSocketUrl = "ws://127.0.0.1:8081";
-    private const string MainScenePath = "res://scenes/Main.tscn";
+    private const string GameScenePath = "res://scenes/AeriviaTest.tscn";
 
     private VBoxContainer? _loginPanel;
     private VBoxContainer? _registerPanel;
@@ -229,7 +229,13 @@ public partial class LoginScreen : Control
                 response.Character
             );
             SetStatus("Login bem-sucedido! Carregando mundo...", error: false, _pendingIsRegister);
-            GetTree().ChangeSceneToFile(MainScenePath);
+            GD.Print("[LoginScreen] Login aprovado; carregando Aerivia.");
+            var sceneChangeError = GetTree().ChangeSceneToFile(GameScenePath);
+            if (sceneChangeError != Error.Ok)
+            {
+                GD.PushError($"LoginScreen: falha ao carregar Aerivia — {sceneChangeError}");
+                SetStatus("Login aprovado, mas o mapa não pôde ser carregado.", error: true, _pendingIsRegister);
+            }
         }
         else
         {

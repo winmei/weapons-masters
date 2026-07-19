@@ -1,0 +1,94 @@
+RELATORIO DE ORGANIZACAO - AERIVIA BLOCKOUT
+================================================
+Arquivo original: C:\Users\bruno\Desktop\weapons-masters\weapons-masters\3D\blender\spawn\Aerivia_Blockout_v002.blend
+Arquivo gerado: C:\Users\bruno\Desktop\weapons-masters\weapons-masters\3D\blender\spawn\Aerivia_Blockout_v003_organizado.blend
+Script: C:\Users\bruno\Desktop\weapons-masters\weapons-masters\tools\blender\organizar_aerivia.py
+Blender: 5.1.2
+SHA-256 original antes: 0756A3AF42CA5B9DF35253CC784F05575C7C7E840A630F38CC0BE09EB58B7858
+SHA-256 original depois: 0756A3AF42CA5B9DF35253CC784F05575C7C7E840A630F38CC0BE09EB58B7858
+Original intacto: SIM
+Quantidade total de objetos: 243
+Objetos classificados/movidos: 228
+Objetos nao classificados: 15
+
+QUANTIDADE DE OBJETOS POR COLECAO CRIADA
+------------------------------------------------
+00_REFERENCIAS/CAMERA [datablock: CAMERA]: 2
+00_REFERENCIAS/GAMEPLAY [datablock: GAMEPLAY]: 15
+00_REFERENCIAS/ENCAIXES_KIT [datablock: ENCAIXES_KIT]: 4
+01_BLOCKOUT/CIDADE [datablock: CIDADE]: 34
+01_BLOCKOUT/AREA_SUL [datablock: AREA_SUL]: 15
+01_BLOCKOUT/BOSQUE [datablock: BOSQUE]: 3
+01_BLOCKOUT/NASCENTE [datablock: NASCENTE]: 3
+01_BLOCKOUT/RUINAS [datablock: RUINAS]: 18
+02_TERRENO/CIDADE [datablock: CIDADE.001]: 4
+02_TERRENO/RUINAS [datablock: RUINAS.001]: 1
+03_ARQUITETURA/KIT_ESTRUTURAL [datablock: KIT_ESTRUTURAL]: 0
+03_ARQUITETURA/KIT_ESTRUTURAL/PISOS [datablock: PISOS]: 3
+03_ARQUITETURA/KIT_ESTRUTURAL/COLUNAS [datablock: COLUNAS]: 3
+03_ARQUITETURA/KIT_ESTRUTURAL/ARCOS [datablock: ARCOS]: 5
+03_ARQUITETURA/KIT_ESTRUTURAL/GUARDA_CORPOS [datablock: GUARDA_CORPOS]: 4
+03_ARQUITETURA/KIT_ESTRUTURAL/COBERTURAS [datablock: COBERTURAS]: 5
+03_ARQUITETURA/KIT_ESTRUTURAL/ESCADAS [datablock: ESCADAS]: 6
+03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES [datablock: PAREDES]: 8
+03_ARQUITETURA/KIT_ESTRUTURAL/CANTOS [datablock: CANTOS]: 4
+03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS [datablock: MOLDURAS]: 8
+03_ARQUITETURA/KIT_ESTRUTURAL/PONTES [datablock: PONTES]: 14
+03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS [datablock: PRACAS]: 9
+03_ARQUITETURA/KIT_URBANO [datablock: KIT_URBANO]: 0
+03_ARQUITETURA/KIT_URBANO/PEDESTAIS [datablock: PEDESTAIS]: 4
+03_ARQUITETURA/KIT_URBANO/FONTES [datablock: FONTES]: 7
+03_ARQUITETURA/KIT_URBANO/POSTES [datablock: POSTES]: 7
+03_ARQUITETURA/KIT_URBANO/BANCOS [datablock: BANCOS]: 6
+03_ARQUITETURA/KIT_URBANO/VASOS [datablock: VASOS]: 4
+05_AGUA/MAPA [datablock: MAPA]: 2
+05_AGUA/KIT_MODULAR [datablock: KIT_MODULAR]: 1
+06_VEGETACAO/MAPA [datablock: MAPA.001]: 17
+06_VEGETACAO/KIT_MODULAR [datablock: KIT_MODULAR.001]: 10
+07_PROPS/KIT_URBANO [datablock: KIT_URBANO.001]: 2
+
+OBJETOS NAO CLASSIFICADOS
+------------------------------------------------
+BLK_Area_Ruinas_Ceu_Partido
+BLK_Arvore_Copa_Central
+BLK_Arvore_Copa_Direita
+BLK_Arvore_Copa_Esquerda
+BLK_Arvore_Tronco_Direito
+BLK_Arvore_Tronco_Esquerdo
+BLK_Oficina_Bancada
+BLK_Oficina_Base
+BLK_Oficina_Cobertura
+BLK_Oficina_Corpo
+BLK_Oficina_Corte_Entrada
+BLK_Oficina_Forno
+BLK_Ponte_GuardaCorpo_Direito
+BLK_Ponte_GuardaCorpo_Esquerdo
+BLK_Spawn_Plataforma
+
+OBJETOS ORIGINALMENTE EM MAIS DE UMA COLECAO
+------------------------------------------------
+Nenhum.
+
+VALIDACOES
+------------------------------------------------
+Contagem antes/depois: 243/243 - OK
+Nenhum objeto apagado, criado ou renomeado: OK
+Transformacoes, escala e dimensoes preservadas: OK
+Modificadores preservados: OK
+Restricoes preservadas: OK
+Parenting, dados, materiais e collection instances preservados: OK
+Visibilidade preservada: OK
+Um unico vinculo organizacional final por objeto classificado: OK
+Arquivo original preservado por comparacao SHA-256: OK
+
+COMANDO UTILIZADO
+------------------------------------------------
+"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" --background "C:\Users\bruno\Desktop\weapons-masters\weapons-masters\3D\blender\spawn\Aerivia_Blockout_v002.blend" --python "C:\Users\bruno\Desktop\weapons-masters\weapons-masters\tools\blender\organizar_aerivia.py"
+
+ERROS OU AVISOS
+------------------------------------------------
+O Blender ajustou o nome interno de 02_TERRENO/CIDADE para CIDADE.001 porque nomes de datablocks de colecao precisam ser unicos.
+O Blender ajustou o nome interno de 02_TERRENO/RUINAS para RUINAS.001 porque nomes de datablocks de colecao precisam ser unicos.
+O Blender ajustou o nome interno de 06_VEGETACAO/MAPA para MAPA.001 porque nomes de datablocks de colecao precisam ser unicos.
+O Blender ajustou o nome interno de 06_VEGETACAO/KIT_MODULAR para KIT_MODULAR.001 porque nomes de datablocks de colecao precisam ser unicos.
+O Blender ajustou o nome interno de 07_PROPS/KIT_URBANO para KIT_URBANO.001 porque nomes de datablocks de colecao precisam ser unicos.

@@ -1,0 +1,1077 @@
+AUDITORIA DE EXPORTACAO - AERIVIA
+========================================================================
+Arquivo auditado: C:\Users\bruno\Desktop\weapons-masters\weapons-masters\3D\blender\spawn\Aerivia_Blockout_v003_organizado.blend
+Blender: 5.1.2
+SHA-256 antes: 3046D797CDBE2B509575E9F4E157C64F4744E47D8FE999D60B5E0A2FF93B59CA
+SHA-256 depois: 3046D797CDBE2B509575E9F4E157C64F4744E47D8FE999D60B5E0A2FF93B59CA
+Arquivo Blender modificado: NAO
+Total de objetos: 243
+Objetos de malha: 237
+Mesh datablocks unicos: 237
+
+RESUMO
+------------------------------------------------------------------------
+Escala diferente de (1, 1, 1): 2
+Nomes exatamente duplicados: 0
+Grupos provaveis por sufixo .001/.002: 0
+Objetos em mais de uma colecao: 0
+Objetos com modificadores: 1
+Objetos com Boolean: 1
+Objetos com restricoes: 1
+Objetos de malha sem material: 237
+Objetos REF_: 21
+Objetos BLK_: 112
+Objetos MOD_: 110
+Cameras: 1
+Luzes: 0
+Vazios: 5
+Objetos ocultos: 7
+Provavelmente nao exportar: 138
+Candidatos de exportacao: 105
+
+GEOMETRIA (CONTAGEM POR INSTANCIA DE OBJETO)
+------------------------------------------------------------------------
+Vertices: 7192
+Faces: 6694
+Triangulos: 13444
+GEOMETRIA (DATABLOCKS DE MALHA UNICOS)
+Vertices: 7192
+Faces: 6694
+Triangulos: 13444
+
+OBJETOS COM ESCALA DIFERENTE DE 1
+------------------------------------------------------------------------
+BLK_Limite_Sul_Rocha_04: escala=(0.833333, 0.875, 0.833333); colecoes=01_BLOCKOUT/AREA_SUL
+BLK_Terreno_Ruinas_Sul: escala=(55, 24, 2); colecoes=02_TERRENO/RUINAS.001
+
+NOMES DUPLICADOS
+------------------------------------------------------------------------
+Duplicatas exatas: Nenhuma.
+Grupos por sufixo numerico: Nenhum.
+
+OBJETOS EM MAIS DE UMA COLECAO
+------------------------------------------------------------------------
+Nenhum.
+
+MODIFICADORES
+------------------------------------------------------------------------
+BLK_Santuario_Corpo: Booliana (BOOLEAN, viewport=True, render=True)
+
+BOOLEANS
+------------------------------------------------------------------------
+BLK_Santuario_Corpo: Booliana
+
+RESTRICOES
+------------------------------------------------------------------------
+REF_Camera_Jogador: Rastrear para (TRACK_TO)
+
+OBJETOS DE MALHA SEM MATERIAL
+------------------------------------------------------------------------
+BLK_Agua_Canal_Sul
+BLK_Agua_Margens_Nascente
+BLK_Area_Bosque_Folhas_Leves
+BLK_Area_Chegada_Sul
+BLK_Area_Margens_Da_Nascente
+BLK_Area_Ruinas_Ceu_Partido
+BLK_Arvore_Copa_Central
+BLK_Arvore_Copa_Direita
+BLK_Arvore_Copa_Esquerda
+BLK_Arvore_Tronco_Direito
+BLK_Arvore_Tronco_Esquerdo
+BLK_Bosque_Copa_01
+BLK_Bosque_Copa_02
+BLK_Bosque_Copa_03
+BLK_Bosque_Rocha_01
+BLK_Bosque_Rocha_02
+BLK_Bosque_Rocha_03
+BLK_Bosque_Tronco_01
+BLK_Bosque_Tronco_02
+BLK_Bosque_Tronco_03
+BLK_Caminho_Bosque_Folhas_Leves
+BLK_Caminho_Bosque_Ruinas
+BLK_Caminho_Margens_Da_Nascente
+BLK_Caminho_Nascente_Lateral
+BLK_Caminho_Nascente_Ruinas
+BLK_Caminho_Ponte_Praca
+BLK_Caminho_Praca_Pavilhao_Direito
+BLK_Caminho_Praca_Pavilhao_Esquerdo
+BLK_Caminho_Saida_Sul
+BLK_Limite_Sul_Copa_01
+BLK_Limite_Sul_Copa_02
+BLK_Limite_Sul_Copa_03
+BLK_Limite_Sul_Copa_04
+BLK_Limite_Sul_Rocha_01
+BLK_Limite_Sul_Rocha_02
+BLK_Limite_Sul_Rocha_03
+BLK_Limite_Sul_Rocha_04
+BLK_Limite_Sul_Tronco_01
+BLK_Limite_Sul_Tronco_02
+BLK_Limite_Sul_Tronco_03
+BLK_Limite_Sul_Tronco_04
+BLK_Monumento_Base
+BLK_Monumento_Cristal
+BLK_Monumento_Pedestal
+BLK_Monumento_Suporte_01
+BLK_Monumento_Suporte_02
+BLK_Monumento_Suporte_03
+BLK_Nascente_Rocha_01
+BLK_Nascente_Rocha_02
+BLK_Nascente_Rocha_03
+BLK_Nascente_Vegetacao_Aquatica_01
+BLK_Nascente_Vegetacao_Aquatica_02
+BLK_Nascente_Vegetacao_Aquatica_03
+BLK_Nivel_Inferior
+BLK_Nivel_Intermediario
+BLK_Nivel_Superior
+BLK_Oficina_Bancada
+BLK_Oficina_Base
+BLK_Oficina_Cobertura
+BLK_Oficina_Corpo
+BLK_Oficina_Corte_Entrada
+BLK_Oficina_Forno
+BLK_Pavilhao_Base_Direito
+BLK_Pavilhao_Base_Esquerdo
+BLK_Pavilhao_Direito_Cobertura
+BLK_Pavilhao_Direito_Coluna_01
+BLK_Pavilhao_Direito_Coluna_02
+BLK_Pavilhao_Direito_Coluna_03
+BLK_Pavilhao_Direito_Coluna_04
+BLK_Pavilhao_Esquerdo_Cobertura
+BLK_Pavilhao_Esquerdo_Coluna_01
+BLK_Pavilhao_Esquerdo_Coluna_02
+BLK_Pavilhao_Esquerdo_Coluna_03
+BLK_Pavilhao_Esquerdo_Coluna_04
+BLK_Placa_Bifurcacao_Sul
+BLK_Placa_Bifurcacao_Travessa
+BLK_Ponte_GuardaCorpo_Direito
+BLK_Ponte_GuardaCorpo_Esquerdo
+BLK_Ponte_Principal
+BLK_Praca_Dos_Ventos
+BLK_Rampa_Santuario_Direita
+BLK_Rampa_Santuario_Esquerda
+BLK_Ruinas_Caminho_Observacao
+BLK_Ruinas_Entrada_Dungeon
+BLK_Ruinas_Fragmento_01
+BLK_Ruinas_Fragmento_02
+BLK_Ruinas_Fragmento_03
+BLK_Ruinas_Fragmento_04
+BLK_Ruinas_Limite_Rocha_01
+BLK_Ruinas_Limite_Rocha_02
+BLK_Ruinas_Limite_Rocha_03
+BLK_Ruinas_Limite_Rocha_04
+BLK_Ruinas_Observacao_GuardaCorpo
+BLK_Ruinas_Pilar_Direito
+BLK_Ruinas_Pilar_Esquerdo
+BLK_Ruinas_Plataforma_Dungeon
+BLK_Ruinas_Plataforma_Observacao
+BLK_Ruinas_Portal_Coluna_Direita
+BLK_Ruinas_Portal_Coluna_Esquerda
+BLK_Ruinas_Portal_Travessa
+BLK_Santuario_Base
+BLK_Santuario_Cobertura
+BLK_Santuario_Coluna_01
+BLK_Santuario_Coluna_02
+BLK_Santuario_Coluna_03
+BLK_Santuario_Coluna_04
+BLK_Santuario_Corpo
+BLK_Santuario_Corte_Entrada
+BLK_Santuario_Viga_Frontal
+BLK_Spawn_Plataforma
+BLK_Terreno_Ruinas_Sul
+BLK_Terreno_Saida_Sul
+MOD_Aerivia_Arbusto_Lado_Direito
+MOD_Aerivia_Arbusto_Lado_Esquerdo
+MOD_Aerivia_Arbusto_Nucleo
+MOD_Aerivia_Arco_Coluna_Direita
+MOD_Aerivia_Arco_Coluna_Esquerda
+MOD_Aerivia_Arco_Superior_Central
+MOD_Aerivia_Arco_Superior_Direita
+MOD_Aerivia_Arco_Superior_Esquerda
+MOD_Aerivia_Arvore_Pequena_Copa_Principal
+MOD_Aerivia_Arvore_Pequena_Copa_Secundaria
+MOD_Aerivia_Arvore_Pequena_Tronco
+MOD_Aerivia_Banco_Assento
+MOD_Aerivia_Banco_Detalhe_Direito
+MOD_Aerivia_Banco_Detalhe_Esquerdo
+MOD_Aerivia_Banco_Encosto
+MOD_Aerivia_Banco_Suporte_Direito
+MOD_Aerivia_Banco_Suporte_Esquerdo
+MOD_Aerivia_Canto_Externo_Frontal
+MOD_Aerivia_Canto_Externo_Lateral
+MOD_Aerivia_Canto_Interno_Frontal
+MOD_Aerivia_Canto_Interno_Lateral
+MOD_Aerivia_Cobertura_Aba_Direita
+MOD_Aerivia_Cobertura_Aba_Esquerda
+MOD_Aerivia_Cobertura_Acabamento_Frontal
+MOD_Aerivia_Cobertura_Cumeeira
+MOD_Aerivia_Cobertura_Estrutura_Central
+MOD_Aerivia_Coluna_Base
+MOD_Aerivia_Coluna_Capitel
+MOD_Aerivia_Coluna_Corpo
+MOD_Aerivia_Escada_Degrau_01
+MOD_Aerivia_Escada_Degrau_02
+MOD_Aerivia_Escada_Degrau_03
+MOD_Aerivia_Escada_Degrau_04
+MOD_Aerivia_Escada_Degrau_05
+MOD_Aerivia_Escada_Patamar
+MOD_Aerivia_Folhas_Central
+MOD_Aerivia_Folhas_Direita
+MOD_Aerivia_Folhas_Esquerda
+MOD_Aerivia_Folhas_Frontal
+MOD_Aerivia_Fonte_Agua
+MOD_Aerivia_Fonte_Base
+MOD_Aerivia_Fonte_Coluna_Base
+MOD_Aerivia_Fonte_Coluna_Corpo
+MOD_Aerivia_Fonte_Nucleo
+MOD_Aerivia_Fonte_Taca_Superior
+MOD_Aerivia_Fonte_Tanque_Borda
+MOD_Aerivia_Fonte_Tanque_Piso
+MOD_Aerivia_GuardaCorpo_Suporte_Direito
+MOD_Aerivia_GuardaCorpo_Suporte_Esquerdo
+MOD_Aerivia_GuardaCorpo_Travessa_Inferior
+MOD_Aerivia_GuardaCorpo_Travessa_Superior
+MOD_Aerivia_Moldura_Janela_Direita
+MOD_Aerivia_Moldura_Janela_Esquerda
+MOD_Aerivia_Moldura_Janela_Inferior
+MOD_Aerivia_Moldura_Janela_Superior
+MOD_Aerivia_Moldura_Porta_Direita
+MOD_Aerivia_Moldura_Porta_Esquerda
+MOD_Aerivia_Moldura_Porta_Soleira
+MOD_Aerivia_Moldura_Porta_Superior
+MOD_Aerivia_Parede_4x4
+MOD_Aerivia_Parede_Janela_Base
+MOD_Aerivia_Parede_Janela_Lateral_Direita
+MOD_Aerivia_Parede_Janela_Lateral_Esquerda
+MOD_Aerivia_Parede_Janela_Travessa
+MOD_Aerivia_Parede_Porta_Lateral_Direita
+MOD_Aerivia_Parede_Porta_Lateral_Esquerda
+MOD_Aerivia_Parede_Porta_Travessa
+MOD_Aerivia_Pedestal_Base
+MOD_Aerivia_Pedestal_Corpo
+MOD_Aerivia_Pedestal_Moldura_Superior
+MOD_Aerivia_Pedestal_Plataforma
+MOD_Aerivia_Piso_2x4
+MOD_Aerivia_Piso_4x4
+MOD_Aerivia_Piso_Borda_4x1
+MOD_Aerivia_Ponte_Encaixe_Terreno
+MOD_Aerivia_Ponte_Entrada_Borda_Direita
+MOD_Aerivia_Ponte_Entrada_Borda_Esquerda
+MOD_Aerivia_Ponte_Entrada_Capitel_Direito
+MOD_Aerivia_Ponte_Entrada_Capitel_Esquerdo
+MOD_Aerivia_Ponte_Entrada_Pilar_Direito
+MOD_Aerivia_Ponte_Entrada_Pilar_Esquerdo
+MOD_Aerivia_Ponte_Piso_4x4
+MOD_Aerivia_Ponte_Rampa_Transicao
+MOD_Aerivia_Ponte_Suporte_Base
+MOD_Aerivia_Ponte_Suporte_Central
+MOD_Aerivia_Ponte_Travessa_Inferior
+MOD_Aerivia_Ponte_Viga_Direita
+MOD_Aerivia_Ponte_Viga_Esquerda
+MOD_Aerivia_Poste_Base_Inferior
+MOD_Aerivia_Poste_Base_Superior
+MOD_Aerivia_Poste_Braco_Inclinado
+MOD_Aerivia_Poste_Braco_Ponta
+MOD_Aerivia_Poste_Capitel
+MOD_Aerivia_Poste_Cristal
+MOD_Aerivia_Poste_Haste
+MOD_Aerivia_Poste_Suporte_Pendente
+MOD_Aerivia_Praca_Borda_Nordeste
+MOD_Aerivia_Praca_Borda_Noroeste
+MOD_Aerivia_Praca_Borda_Sudeste
+MOD_Aerivia_Praca_Borda_Sudoeste
+MOD_Aerivia_Praca_Encaixe_Leste
+MOD_Aerivia_Praca_Encaixe_Norte
+MOD_Aerivia_Praca_Encaixe_Oeste
+MOD_Aerivia_Praca_Encaixe_Sul
+MOD_Aerivia_Praca_Piso_Central
+MOD_Aerivia_Vaso_Base
+MOD_Aerivia_Vaso_Borda
+MOD_Aerivia_Vaso_Corpo_Inferior
+MOD_Aerivia_Vaso_Corpo_Superior
+MOD_Aerivia_Vaso_Substrato
+REF_Jogador_180cm
+REF_NPC_Guia_Clareira_Sul
+REF_Ponto_Retorno_Clareira_Sul
+REF_Recurso_Bosque_01
+REF_Recurso_Bosque_02
+REF_Recurso_Bosque_Raro
+REF_Recurso_Nascente_01
+REF_Spawn_Chefe_Guardiao_Ruinas
+REF_Spawn_Mob_Bosque_01
+REF_Spawn_Mob_Bosque_02
+REF_Spawn_Mob_Bosque_Elite
+REF_Spawn_Mob_Nascente_01
+REF_Spawn_Mob_Nascente_02
+REF_Spawn_Mob_Ruinas_Elite_01
+REF_Spawn_Mob_Ruinas_Elite_02
+
+OBJETOS REF_
+------------------------------------------------------------------------
+REF_Aerivia_Fonte_Saida_Agua: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Aerivia_Pedestal_Encaixe: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Aerivia_Poste_Ponto_Luz: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Aerivia_Vaso_Encaixe: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Camera_Alvo: 00_REFERENCIAS/CAMERA
+REF_Camera_Jogador: 00_REFERENCIAS/CAMERA
+REF_Jogador_180cm: 00_REFERENCIAS/GAMEPLAY
+REF_NPC_Guia_Clareira_Sul: 00_REFERENCIAS/GAMEPLAY
+REF_Ponto_Retorno_Clareira_Sul: 00_REFERENCIAS/GAMEPLAY
+REF_Recurso_Bosque_01: 00_REFERENCIAS/GAMEPLAY
+REF_Recurso_Bosque_02: 00_REFERENCIAS/GAMEPLAY
+REF_Recurso_Bosque_Raro: 00_REFERENCIAS/GAMEPLAY
+REF_Recurso_Nascente_01: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Chefe_Guardiao_Ruinas: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Mob_Bosque_01: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Mob_Bosque_02: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Mob_Bosque_Elite: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Mob_Nascente_01: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Mob_Nascente_02: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Mob_Ruinas_Elite_01: 00_REFERENCIAS/GAMEPLAY
+REF_Spawn_Mob_Ruinas_Elite_02: 00_REFERENCIAS/GAMEPLAY
+
+OBJETOS BLK_
+------------------------------------------------------------------------
+BLK_Agua_Canal_Sul: 05_AGUA/MAPA
+BLK_Agua_Margens_Nascente: 05_AGUA/MAPA
+BLK_Area_Bosque_Folhas_Leves: 01_BLOCKOUT/AREA_SUL
+BLK_Area_Chegada_Sul: 01_BLOCKOUT/AREA_SUL
+BLK_Area_Margens_Da_Nascente: 01_BLOCKOUT/AREA_SUL
+BLK_Area_Ruinas_Ceu_Partido: 01_BLOCKOUT
+BLK_Arvore_Copa_Central: 01_BLOCKOUT
+BLK_Arvore_Copa_Direita: 01_BLOCKOUT
+BLK_Arvore_Copa_Esquerda: 01_BLOCKOUT
+BLK_Arvore_Tronco_Direito: 01_BLOCKOUT
+BLK_Arvore_Tronco_Esquerdo: 01_BLOCKOUT
+BLK_Bosque_Copa_01: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Copa_02: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Copa_03: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Rocha_01: 01_BLOCKOUT/BOSQUE
+BLK_Bosque_Rocha_02: 01_BLOCKOUT/BOSQUE
+BLK_Bosque_Rocha_03: 01_BLOCKOUT/BOSQUE
+BLK_Bosque_Tronco_01: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Tronco_02: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Tronco_03: 06_VEGETACAO/MAPA.001
+BLK_Caminho_Bosque_Folhas_Leves: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Bosque_Ruinas: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Margens_Da_Nascente: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Nascente_Lateral: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Nascente_Ruinas: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Ponte_Praca: 01_BLOCKOUT/CIDADE
+BLK_Caminho_Praca_Pavilhao_Direito: 01_BLOCKOUT/CIDADE
+BLK_Caminho_Praca_Pavilhao_Esquerdo: 01_BLOCKOUT/CIDADE
+BLK_Caminho_Saida_Sul: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Copa_01: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Copa_02: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Copa_03: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Copa_04: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Rocha_01: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Rocha_02: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Rocha_03: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Rocha_04: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Tronco_01: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Tronco_02: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Tronco_03: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Tronco_04: 06_VEGETACAO/MAPA.001
+BLK_Monumento_Base: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Cristal: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Pedestal: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Suporte_01: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Suporte_02: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Suporte_03: 01_BLOCKOUT/CIDADE
+BLK_Nascente_Rocha_01: 01_BLOCKOUT/NASCENTE
+BLK_Nascente_Rocha_02: 01_BLOCKOUT/NASCENTE
+BLK_Nascente_Rocha_03: 01_BLOCKOUT/NASCENTE
+BLK_Nascente_Vegetacao_Aquatica_01: 06_VEGETACAO/MAPA.001
+BLK_Nascente_Vegetacao_Aquatica_02: 06_VEGETACAO/MAPA.001
+BLK_Nascente_Vegetacao_Aquatica_03: 06_VEGETACAO/MAPA.001
+BLK_Nivel_Inferior: 02_TERRENO/CIDADE.001
+BLK_Nivel_Intermediario: 02_TERRENO/CIDADE.001
+BLK_Nivel_Superior: 02_TERRENO/CIDADE.001
+BLK_Oficina_Bancada: 09_OPCIONAIS
+BLK_Oficina_Base: 09_OPCIONAIS
+BLK_Oficina_Cobertura: 09_OPCIONAIS
+BLK_Oficina_Corpo: 09_OPCIONAIS
+BLK_Oficina_Corte_Entrada: 09_OPCIONAIS
+BLK_Oficina_Forno: 09_OPCIONAIS
+BLK_Pavilhao_Base_Direito: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Base_Esquerdo: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Cobertura: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_01: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_02: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_03: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_04: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Cobertura: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_01: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_02: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_03: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_04: 01_BLOCKOUT/CIDADE
+BLK_Placa_Bifurcacao_Sul: 01_BLOCKOUT/AREA_SUL
+BLK_Placa_Bifurcacao_Travessa: 01_BLOCKOUT/AREA_SUL
+BLK_Ponte_GuardaCorpo_Direito: 01_BLOCKOUT
+BLK_Ponte_GuardaCorpo_Esquerdo: 01_BLOCKOUT
+BLK_Ponte_Principal: 01_BLOCKOUT/CIDADE
+BLK_Praca_Dos_Ventos: 01_BLOCKOUT/CIDADE
+BLK_Rampa_Santuario_Direita: 01_BLOCKOUT/CIDADE
+BLK_Rampa_Santuario_Esquerda: 01_BLOCKOUT/CIDADE
+BLK_Ruinas_Caminho_Observacao: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Entrada_Dungeon: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_01: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_02: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_03: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_04: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_01: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_02: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_03: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_04: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Observacao_GuardaCorpo: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Pilar_Direito: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Pilar_Esquerdo: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Plataforma_Dungeon: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Plataforma_Observacao: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Portal_Coluna_Direita: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Portal_Coluna_Esquerda: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Portal_Travessa: 01_BLOCKOUT/RUINAS
+BLK_Santuario_Base: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Cobertura: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_01: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_02: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_03: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_04: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Corpo: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Corte_Entrada: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Viga_Frontal: 01_BLOCKOUT/CIDADE
+BLK_Spawn_Plataforma: 01_BLOCKOUT
+BLK_Terreno_Ruinas_Sul: 02_TERRENO/RUINAS.001
+BLK_Terreno_Saida_Sul: 02_TERRENO/CIDADE.001
+
+OBJETOS MOD_
+------------------------------------------------------------------------
+MOD_Aerivia_Arbusto_Lado_Direito: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Arbusto_Lado_Esquerdo: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Arbusto_Nucleo: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Arco_Coluna_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/ARCOS
+MOD_Aerivia_Arco_Coluna_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/ARCOS
+MOD_Aerivia_Arco_Superior_Central: 03_ARQUITETURA/KIT_ESTRUTURAL/ARCOS
+MOD_Aerivia_Arco_Superior_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/ARCOS
+MOD_Aerivia_Arco_Superior_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/ARCOS
+MOD_Aerivia_Arvore_Pequena_Copa_Principal: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Arvore_Pequena_Copa_Secundaria: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Arvore_Pequena_Tronco: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Banco_Assento: 03_ARQUITETURA/KIT_URBANO/BANCOS
+MOD_Aerivia_Banco_Detalhe_Direito: 03_ARQUITETURA/KIT_URBANO/BANCOS
+MOD_Aerivia_Banco_Detalhe_Esquerdo: 03_ARQUITETURA/KIT_URBANO/BANCOS
+MOD_Aerivia_Banco_Encosto: 03_ARQUITETURA/KIT_URBANO/BANCOS
+MOD_Aerivia_Banco_Suporte_Direito: 03_ARQUITETURA/KIT_URBANO/BANCOS
+MOD_Aerivia_Banco_Suporte_Esquerdo: 03_ARQUITETURA/KIT_URBANO/BANCOS
+MOD_Aerivia_Canto_Externo_Frontal: 03_ARQUITETURA/KIT_ESTRUTURAL/CANTOS
+MOD_Aerivia_Canto_Externo_Lateral: 03_ARQUITETURA/KIT_ESTRUTURAL/CANTOS
+MOD_Aerivia_Canto_Interno_Frontal: 03_ARQUITETURA/KIT_ESTRUTURAL/CANTOS
+MOD_Aerivia_Canto_Interno_Lateral: 03_ARQUITETURA/KIT_ESTRUTURAL/CANTOS
+MOD_Aerivia_Cobertura_Aba_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/COBERTURAS
+MOD_Aerivia_Cobertura_Aba_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/COBERTURAS
+MOD_Aerivia_Cobertura_Acabamento_Frontal: 03_ARQUITETURA/KIT_ESTRUTURAL/COBERTURAS
+MOD_Aerivia_Cobertura_Cumeeira: 03_ARQUITETURA/KIT_ESTRUTURAL/COBERTURAS
+MOD_Aerivia_Cobertura_Estrutura_Central: 03_ARQUITETURA/KIT_ESTRUTURAL/COBERTURAS
+MOD_Aerivia_Coluna_Base: 03_ARQUITETURA/KIT_ESTRUTURAL/COLUNAS
+MOD_Aerivia_Coluna_Capitel: 03_ARQUITETURA/KIT_ESTRUTURAL/COLUNAS
+MOD_Aerivia_Coluna_Corpo: 03_ARQUITETURA/KIT_ESTRUTURAL/COLUNAS
+MOD_Aerivia_Escada_Degrau_01: 03_ARQUITETURA/KIT_ESTRUTURAL/ESCADAS
+MOD_Aerivia_Escada_Degrau_02: 03_ARQUITETURA/KIT_ESTRUTURAL/ESCADAS
+MOD_Aerivia_Escada_Degrau_03: 03_ARQUITETURA/KIT_ESTRUTURAL/ESCADAS
+MOD_Aerivia_Escada_Degrau_04: 03_ARQUITETURA/KIT_ESTRUTURAL/ESCADAS
+MOD_Aerivia_Escada_Degrau_05: 03_ARQUITETURA/KIT_ESTRUTURAL/ESCADAS
+MOD_Aerivia_Escada_Patamar: 03_ARQUITETURA/KIT_ESTRUTURAL/ESCADAS
+MOD_Aerivia_Folhas_Central: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Folhas_Direita: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Folhas_Esquerda: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Folhas_Frontal: 06_VEGETACAO/KIT_MODULAR.001
+MOD_Aerivia_Fonte_Agua: 05_AGUA/KIT_MODULAR
+MOD_Aerivia_Fonte_Base: 03_ARQUITETURA/KIT_URBANO/FONTES
+MOD_Aerivia_Fonte_Coluna_Base: 03_ARQUITETURA/KIT_URBANO/FONTES
+MOD_Aerivia_Fonte_Coluna_Corpo: 03_ARQUITETURA/KIT_URBANO/FONTES
+MOD_Aerivia_Fonte_Nucleo: 03_ARQUITETURA/KIT_URBANO/FONTES
+MOD_Aerivia_Fonte_Taca_Superior: 03_ARQUITETURA/KIT_URBANO/FONTES
+MOD_Aerivia_Fonte_Tanque_Borda: 03_ARQUITETURA/KIT_URBANO/FONTES
+MOD_Aerivia_Fonte_Tanque_Piso: 03_ARQUITETURA/KIT_URBANO/FONTES
+MOD_Aerivia_GuardaCorpo_Suporte_Direito: 03_ARQUITETURA/KIT_ESTRUTURAL/GUARDA_CORPOS
+MOD_Aerivia_GuardaCorpo_Suporte_Esquerdo: 03_ARQUITETURA/KIT_ESTRUTURAL/GUARDA_CORPOS
+MOD_Aerivia_GuardaCorpo_Travessa_Inferior: 03_ARQUITETURA/KIT_ESTRUTURAL/GUARDA_CORPOS
+MOD_Aerivia_GuardaCorpo_Travessa_Superior: 03_ARQUITETURA/KIT_ESTRUTURAL/GUARDA_CORPOS
+MOD_Aerivia_Moldura_Janela_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Moldura_Janela_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Moldura_Janela_Inferior: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Moldura_Janela_Superior: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Moldura_Porta_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Moldura_Porta_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Moldura_Porta_Soleira: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Moldura_Porta_Superior: 03_ARQUITETURA/KIT_ESTRUTURAL/MOLDURAS
+MOD_Aerivia_Parede_4x4: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Parede_Janela_Base: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Parede_Janela_Lateral_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Parede_Janela_Lateral_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Parede_Janela_Travessa: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Parede_Porta_Lateral_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Parede_Porta_Lateral_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Parede_Porta_Travessa: 03_ARQUITETURA/KIT_ESTRUTURAL/PAREDES
+MOD_Aerivia_Pedestal_Base: 03_ARQUITETURA/KIT_URBANO/PEDESTAIS
+MOD_Aerivia_Pedestal_Corpo: 03_ARQUITETURA/KIT_URBANO/PEDESTAIS
+MOD_Aerivia_Pedestal_Moldura_Superior: 03_ARQUITETURA/KIT_URBANO/PEDESTAIS
+MOD_Aerivia_Pedestal_Plataforma: 03_ARQUITETURA/KIT_URBANO/PEDESTAIS
+MOD_Aerivia_Piso_2x4: 03_ARQUITETURA/KIT_ESTRUTURAL/PISOS
+MOD_Aerivia_Piso_4x4: 03_ARQUITETURA/KIT_ESTRUTURAL/PISOS
+MOD_Aerivia_Piso_Borda_4x1: 03_ARQUITETURA/KIT_ESTRUTURAL/PISOS
+MOD_Aerivia_Ponte_Encaixe_Terreno: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Entrada_Borda_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Entrada_Borda_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Entrada_Capitel_Direito: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Entrada_Capitel_Esquerdo: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Entrada_Pilar_Direito: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Entrada_Pilar_Esquerdo: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Piso_4x4: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Rampa_Transicao: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Suporte_Base: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Suporte_Central: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Travessa_Inferior: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Viga_Direita: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Ponte_Viga_Esquerda: 03_ARQUITETURA/KIT_ESTRUTURAL/PONTES
+MOD_Aerivia_Poste_Base_Inferior: 03_ARQUITETURA/KIT_URBANO/POSTES
+MOD_Aerivia_Poste_Base_Superior: 03_ARQUITETURA/KIT_URBANO/POSTES
+MOD_Aerivia_Poste_Braco_Inclinado: 03_ARQUITETURA/KIT_URBANO/POSTES
+MOD_Aerivia_Poste_Braco_Ponta: 03_ARQUITETURA/KIT_URBANO/POSTES
+MOD_Aerivia_Poste_Capitel: 03_ARQUITETURA/KIT_URBANO/POSTES
+MOD_Aerivia_Poste_Cristal: 07_PROPS/KIT_URBANO.001
+MOD_Aerivia_Poste_Haste: 03_ARQUITETURA/KIT_URBANO/POSTES
+MOD_Aerivia_Poste_Suporte_Pendente: 03_ARQUITETURA/KIT_URBANO/POSTES
+MOD_Aerivia_Praca_Borda_Nordeste: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Borda_Noroeste: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Borda_Sudeste: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Borda_Sudoeste: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Encaixe_Leste: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Encaixe_Norte: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Encaixe_Oeste: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Encaixe_Sul: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Praca_Piso_Central: 03_ARQUITETURA/KIT_ESTRUTURAL/PRACAS
+MOD_Aerivia_Vaso_Base: 03_ARQUITETURA/KIT_URBANO/VASOS
+MOD_Aerivia_Vaso_Borda: 03_ARQUITETURA/KIT_URBANO/VASOS
+MOD_Aerivia_Vaso_Corpo_Inferior: 03_ARQUITETURA/KIT_URBANO/VASOS
+MOD_Aerivia_Vaso_Corpo_Superior: 03_ARQUITETURA/KIT_URBANO/VASOS
+MOD_Aerivia_Vaso_Substrato: 07_PROPS/KIT_URBANO.001
+
+CAMERAS
+------------------------------------------------------------------------
+REF_Camera_Jogador: 00_REFERENCIAS/CAMERA
+
+LUZES
+------------------------------------------------------------------------
+Nenhum.
+
+VAZIOS
+------------------------------------------------------------------------
+REF_Aerivia_Fonte_Saida_Agua: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Aerivia_Pedestal_Encaixe: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Aerivia_Poste_Ponto_Luz: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Aerivia_Vaso_Encaixe: 00_REFERENCIAS/ENCAIXES_KIT
+REF_Camera_Alvo: 00_REFERENCIAS/CAMERA
+
+OBJETOS OCULTOS
+------------------------------------------------------------------------
+BLK_Oficina_Bancada: 09_OPCIONAIS
+BLK_Oficina_Base: 09_OPCIONAIS
+BLK_Oficina_Cobertura: 09_OPCIONAIS
+BLK_Oficina_Corpo: 09_OPCIONAIS
+BLK_Oficina_Corte_Entrada: 09_OPCIONAIS
+BLK_Oficina_Forno: 09_OPCIONAIS
+BLK_Santuario_Corte_Entrada: 01_BLOCKOUT/CIDADE
+
+PROVAVELMENTE NAO EXPORTAR
+------------------------------------------------------------------------
+BLK_Oficina_Bancada: objeto oculto, colecao opcional
+BLK_Oficina_Base: objeto oculto, colecao opcional
+BLK_Oficina_Cobertura: objeto oculto, colecao opcional
+BLK_Oficina_Corpo: objeto oculto, colecao opcional
+BLK_Oficina_Corte_Entrada: objeto oculto, colecao opcional
+BLK_Oficina_Forno: objeto oculto, colecao opcional
+BLK_Santuario_Corte_Entrada: objeto oculto
+MOD_Aerivia_Arbusto_Lado_Direito: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arbusto_Lado_Esquerdo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arbusto_Nucleo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arco_Coluna_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arco_Coluna_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arco_Superior_Central: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arco_Superior_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arco_Superior_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arvore_Pequena_Copa_Principal: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arvore_Pequena_Copa_Secundaria: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Arvore_Pequena_Tronco: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Banco_Assento: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Banco_Detalhe_Direito: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Banco_Detalhe_Esquerdo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Banco_Encosto: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Banco_Suporte_Direito: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Banco_Suporte_Esquerdo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Canto_Externo_Frontal: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Canto_Externo_Lateral: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Canto_Interno_Frontal: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Canto_Interno_Lateral: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Cobertura_Aba_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Cobertura_Aba_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Cobertura_Acabamento_Frontal: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Cobertura_Cumeeira: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Cobertura_Estrutura_Central: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Coluna_Base: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Coluna_Capitel: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Coluna_Corpo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Escada_Degrau_01: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Escada_Degrau_02: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Escada_Degrau_03: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Escada_Degrau_04: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Escada_Degrau_05: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Escada_Patamar: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Folhas_Central: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Folhas_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Folhas_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Folhas_Frontal: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Agua: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Base: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Coluna_Base: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Coluna_Corpo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Nucleo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Taca_Superior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Tanque_Borda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Fonte_Tanque_Piso: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_GuardaCorpo_Suporte_Direito: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_GuardaCorpo_Suporte_Esquerdo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_GuardaCorpo_Travessa_Inferior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_GuardaCorpo_Travessa_Superior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Janela_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Janela_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Janela_Inferior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Janela_Superior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Porta_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Porta_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Porta_Soleira: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Moldura_Porta_Superior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_4x4: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_Janela_Base: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_Janela_Lateral_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_Janela_Lateral_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_Janela_Travessa: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_Porta_Lateral_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_Porta_Lateral_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Parede_Porta_Travessa: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Pedestal_Base: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Pedestal_Corpo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Pedestal_Moldura_Superior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Pedestal_Plataforma: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Piso_2x4: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Piso_4x4: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Piso_Borda_4x1: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Encaixe_Terreno: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Entrada_Borda_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Entrada_Borda_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Entrada_Capitel_Direito: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Entrada_Capitel_Esquerdo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Entrada_Pilar_Direito: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Entrada_Pilar_Esquerdo: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Piso_4x4: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Rampa_Transicao: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Suporte_Base: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Suporte_Central: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Travessa_Inferior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Viga_Direita: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Ponte_Viga_Esquerda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Base_Inferior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Base_Superior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Braco_Inclinado: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Braco_Ponta: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Capitel: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Cristal: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Haste: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Poste_Suporte_Pendente: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Borda_Nordeste: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Borda_Noroeste: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Borda_Sudeste: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Borda_Sudoeste: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Encaixe_Leste: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Encaixe_Norte: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Encaixe_Oeste: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Encaixe_Sul: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Praca_Piso_Central: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Vaso_Base: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Vaso_Borda: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Vaso_Corpo_Inferior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Vaso_Corpo_Superior: kit modular MOD_ fora do mapa, colecao de kit modular
+MOD_Aerivia_Vaso_Substrato: kit modular MOD_ fora do mapa, colecao de kit modular
+REF_Aerivia_Fonte_Saida_Agua: vazio/guia, prefixo REF_, colecao de referencias
+REF_Aerivia_Pedestal_Encaixe: vazio/guia, prefixo REF_, colecao de referencias
+REF_Aerivia_Poste_Ponto_Luz: vazio/guia, prefixo REF_, colecao de referencias
+REF_Aerivia_Vaso_Encaixe: vazio/guia, prefixo REF_, colecao de referencias
+REF_Camera_Alvo: vazio/guia, prefixo REF_, colecao de referencias
+REF_Camera_Jogador: camera, prefixo REF_, colecao de referencias
+REF_Jogador_180cm: prefixo REF_, colecao de referencias
+REF_NPC_Guia_Clareira_Sul: prefixo REF_, colecao de referencias
+REF_Ponto_Retorno_Clareira_Sul: prefixo REF_, colecao de referencias
+REF_Recurso_Bosque_01: prefixo REF_, colecao de referencias
+REF_Recurso_Bosque_02: prefixo REF_, colecao de referencias
+REF_Recurso_Bosque_Raro: prefixo REF_, colecao de referencias
+REF_Recurso_Nascente_01: prefixo REF_, colecao de referencias
+REF_Spawn_Chefe_Guardiao_Ruinas: prefixo REF_, colecao de referencias
+REF_Spawn_Mob_Bosque_01: prefixo REF_, colecao de referencias
+REF_Spawn_Mob_Bosque_02: prefixo REF_, colecao de referencias
+REF_Spawn_Mob_Bosque_Elite: prefixo REF_, colecao de referencias
+REF_Spawn_Mob_Nascente_01: prefixo REF_, colecao de referencias
+REF_Spawn_Mob_Nascente_02: prefixo REF_, colecao de referencias
+REF_Spawn_Mob_Ruinas_Elite_01: prefixo REF_, colecao de referencias
+REF_Spawn_Mob_Ruinas_Elite_02: prefixo REF_, colecao de referencias
+
+CANDIDATOS DE EXPORTACAO
+------------------------------------------------------------------------
+BLK_Agua_Canal_Sul: 05_AGUA/MAPA
+BLK_Agua_Margens_Nascente: 05_AGUA/MAPA
+BLK_Area_Bosque_Folhas_Leves: 01_BLOCKOUT/AREA_SUL
+BLK_Area_Chegada_Sul: 01_BLOCKOUT/AREA_SUL
+BLK_Area_Margens_Da_Nascente: 01_BLOCKOUT/AREA_SUL
+BLK_Area_Ruinas_Ceu_Partido: 01_BLOCKOUT
+BLK_Arvore_Copa_Central: 01_BLOCKOUT
+BLK_Arvore_Copa_Direita: 01_BLOCKOUT
+BLK_Arvore_Copa_Esquerda: 01_BLOCKOUT
+BLK_Arvore_Tronco_Direito: 01_BLOCKOUT
+BLK_Arvore_Tronco_Esquerdo: 01_BLOCKOUT
+BLK_Bosque_Copa_01: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Copa_02: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Copa_03: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Rocha_01: 01_BLOCKOUT/BOSQUE
+BLK_Bosque_Rocha_02: 01_BLOCKOUT/BOSQUE
+BLK_Bosque_Rocha_03: 01_BLOCKOUT/BOSQUE
+BLK_Bosque_Tronco_01: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Tronco_02: 06_VEGETACAO/MAPA.001
+BLK_Bosque_Tronco_03: 06_VEGETACAO/MAPA.001
+BLK_Caminho_Bosque_Folhas_Leves: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Bosque_Ruinas: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Margens_Da_Nascente: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Nascente_Lateral: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Nascente_Ruinas: 01_BLOCKOUT/AREA_SUL
+BLK_Caminho_Ponte_Praca: 01_BLOCKOUT/CIDADE
+BLK_Caminho_Praca_Pavilhao_Direito: 01_BLOCKOUT/CIDADE
+BLK_Caminho_Praca_Pavilhao_Esquerdo: 01_BLOCKOUT/CIDADE
+BLK_Caminho_Saida_Sul: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Copa_01: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Copa_02: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Copa_03: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Copa_04: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Rocha_01: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Rocha_02: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Rocha_03: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Rocha_04: 01_BLOCKOUT/AREA_SUL
+BLK_Limite_Sul_Tronco_01: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Tronco_02: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Tronco_03: 06_VEGETACAO/MAPA.001
+BLK_Limite_Sul_Tronco_04: 06_VEGETACAO/MAPA.001
+BLK_Monumento_Base: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Cristal: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Pedestal: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Suporte_01: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Suporte_02: 01_BLOCKOUT/CIDADE
+BLK_Monumento_Suporte_03: 01_BLOCKOUT/CIDADE
+BLK_Nascente_Rocha_01: 01_BLOCKOUT/NASCENTE
+BLK_Nascente_Rocha_02: 01_BLOCKOUT/NASCENTE
+BLK_Nascente_Rocha_03: 01_BLOCKOUT/NASCENTE
+BLK_Nascente_Vegetacao_Aquatica_01: 06_VEGETACAO/MAPA.001
+BLK_Nascente_Vegetacao_Aquatica_02: 06_VEGETACAO/MAPA.001
+BLK_Nascente_Vegetacao_Aquatica_03: 06_VEGETACAO/MAPA.001
+BLK_Nivel_Inferior: 02_TERRENO/CIDADE.001
+BLK_Nivel_Intermediario: 02_TERRENO/CIDADE.001
+BLK_Nivel_Superior: 02_TERRENO/CIDADE.001
+BLK_Pavilhao_Base_Direito: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Base_Esquerdo: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Cobertura: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_01: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_02: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_03: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Direito_Coluna_04: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Cobertura: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_01: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_02: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_03: 01_BLOCKOUT/CIDADE
+BLK_Pavilhao_Esquerdo_Coluna_04: 01_BLOCKOUT/CIDADE
+BLK_Placa_Bifurcacao_Sul: 01_BLOCKOUT/AREA_SUL
+BLK_Placa_Bifurcacao_Travessa: 01_BLOCKOUT/AREA_SUL
+BLK_Ponte_GuardaCorpo_Direito: 01_BLOCKOUT
+BLK_Ponte_GuardaCorpo_Esquerdo: 01_BLOCKOUT
+BLK_Ponte_Principal: 01_BLOCKOUT/CIDADE
+BLK_Praca_Dos_Ventos: 01_BLOCKOUT/CIDADE
+BLK_Rampa_Santuario_Direita: 01_BLOCKOUT/CIDADE
+BLK_Rampa_Santuario_Esquerda: 01_BLOCKOUT/CIDADE
+BLK_Ruinas_Caminho_Observacao: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Entrada_Dungeon: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_01: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_02: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_03: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Fragmento_04: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_01: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_02: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_03: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Limite_Rocha_04: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Observacao_GuardaCorpo: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Pilar_Direito: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Pilar_Esquerdo: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Plataforma_Dungeon: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Plataforma_Observacao: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Portal_Coluna_Direita: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Portal_Coluna_Esquerda: 01_BLOCKOUT/RUINAS
+BLK_Ruinas_Portal_Travessa: 01_BLOCKOUT/RUINAS
+BLK_Santuario_Base: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Cobertura: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_01: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_02: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_03: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Coluna_04: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Corpo: 01_BLOCKOUT/CIDADE
+BLK_Santuario_Viga_Frontal: 01_BLOCKOUT/CIDADE
+BLK_Spawn_Plataforma: 01_BLOCKOUT
+BLK_Terreno_Ruinas_Sul: 02_TERRENO/RUINAS.001
+BLK_Terreno_Saida_Sul: 02_TERRENO/CIDADE.001
+
+ESTATISTICAS POR OBJETO DE MALHA
+------------------------------------------------------------------------
+BLK_Agua_Canal_Sul: vertices=8; faces=6; triangulos=12; mesh=Cubo.015
+BLK_Agua_Margens_Nascente: vertices=48; faces=26; triangulos=92; mesh=Cilindro.033
+BLK_Area_Bosque_Folhas_Leves: vertices=48; faces=26; triangulos=92; mesh=Cilindro.031
+BLK_Area_Chegada_Sul: vertices=48; faces=26; triangulos=92; mesh=Cilindro.029
+BLK_Area_Margens_Da_Nascente: vertices=48; faces=26; triangulos=92; mesh=Cilindro.032
+BLK_Area_Ruinas_Ceu_Partido: vertices=48; faces=26; triangulos=92; mesh=Cilindro.058
+BLK_Arvore_Copa_Central: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica
+BLK_Arvore_Copa_Direita: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.002
+BLK_Arvore_Copa_Esquerda: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.001
+BLK_Arvore_Tronco_Direito: vertices=32; faces=18; triangulos=60; mesh=Cilindro.004
+BLK_Arvore_Tronco_Esquerdo: vertices=32; faces=18; triangulos=60; mesh=Cilindro.003
+BLK_Bosque_Copa_01: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.004
+BLK_Bosque_Copa_02: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.005
+BLK_Bosque_Copa_03: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.006
+BLK_Bosque_Rocha_01: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.007
+BLK_Bosque_Rocha_02: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.008
+BLK_Bosque_Rocha_03: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.009
+BLK_Bosque_Tronco_01: vertices=20; faces=12; triangulos=36; mesh=Cilindro.035
+BLK_Bosque_Tronco_02: vertices=20; faces=12; triangulos=36; mesh=Cilindro.036
+BLK_Bosque_Tronco_03: vertices=20; faces=12; triangulos=36; mesh=Cilindro.037
+BLK_Caminho_Bosque_Folhas_Leves: vertices=8; faces=6; triangulos=12; mesh=Cubo.027
+BLK_Caminho_Bosque_Ruinas: vertices=8; faces=6; triangulos=12; mesh=Cubo.034
+BLK_Caminho_Margens_Da_Nascente: vertices=8; faces=6; triangulos=12; mesh=Cubo.028
+BLK_Caminho_Nascente_Lateral: vertices=8; faces=6; triangulos=12; mesh=Cubo.029
+BLK_Caminho_Nascente_Ruinas: vertices=8; faces=6; triangulos=12; mesh=Cubo.035
+BLK_Caminho_Ponte_Praca: vertices=8; faces=6; triangulos=12; mesh=Cubo.023
+BLK_Caminho_Praca_Pavilhao_Direito: vertices=8; faces=6; triangulos=12; mesh=Cubo.025
+BLK_Caminho_Praca_Pavilhao_Esquerdo: vertices=8; faces=6; triangulos=12; mesh=Cubo.024
+BLK_Caminho_Saida_Sul: vertices=8; faces=6; triangulos=12; mesh=Cubo.026
+BLK_Limite_Sul_Copa_01: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.017
+BLK_Limite_Sul_Copa_02: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.018
+BLK_Limite_Sul_Copa_03: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.019
+BLK_Limite_Sul_Copa_04: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.020
+BLK_Limite_Sul_Rocha_01: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.013
+BLK_Limite_Sul_Rocha_02: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.014
+BLK_Limite_Sul_Rocha_03: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.015
+BLK_Limite_Sul_Rocha_04: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.016
+BLK_Limite_Sul_Tronco_01: vertices=20; faces=12; triangulos=36; mesh=Cilindro.053
+BLK_Limite_Sul_Tronco_02: vertices=20; faces=12; triangulos=36; mesh=Cilindro.054
+BLK_Limite_Sul_Tronco_03: vertices=20; faces=12; triangulos=36; mesh=Cilindro.055
+BLK_Limite_Sul_Tronco_04: vertices=20; faces=12; triangulos=36; mesh=Cilindro.056
+BLK_Monumento_Base: vertices=64; faces=34; triangulos=124; mesh=Cilindro.011
+BLK_Monumento_Cristal: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.003
+BLK_Monumento_Pedestal: vertices=48; faces=26; triangulos=92; mesh=Cilindro.012
+BLK_Monumento_Suporte_01: vertices=24; faces=14; triangulos=44; mesh=Cilindro.013
+BLK_Monumento_Suporte_02: vertices=24; faces=14; triangulos=44; mesh=Cilindro.014
+BLK_Monumento_Suporte_03: vertices=24; faces=14; triangulos=44; mesh=Cilindro.015
+BLK_Nascente_Rocha_01: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.010
+BLK_Nascente_Rocha_02: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.011
+BLK_Nascente_Rocha_03: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.012
+BLK_Nascente_Vegetacao_Aquatica_01: vertices=24; faces=14; triangulos=44; mesh=Cilindro.041
+BLK_Nascente_Vegetacao_Aquatica_02: vertices=24; faces=14; triangulos=44; mesh=Cilindro.042
+BLK_Nascente_Vegetacao_Aquatica_03: vertices=24; faces=14; triangulos=44; mesh=Cilindro.043
+BLK_Nivel_Inferior: vertices=8; faces=6; triangulos=12; mesh=Cubo.001
+BLK_Nivel_Intermediario: vertices=8; faces=6; triangulos=12; mesh=Cubo.002
+BLK_Nivel_Superior: vertices=8; faces=6; triangulos=12; mesh=Cubo.003
+BLK_Oficina_Bancada: vertices=8; faces=6; triangulos=12; mesh=Cubo.021
+BLK_Oficina_Base: vertices=8; faces=6; triangulos=12; mesh=Cubo.016
+BLK_Oficina_Cobertura: vertices=8; faces=6; triangulos=12; mesh=Cubo.020
+BLK_Oficina_Corpo: vertices=8; faces=6; triangulos=12; mesh=Cubo.017
+BLK_Oficina_Corte_Entrada: vertices=8; faces=6; triangulos=12; mesh=Cubo.018
+BLK_Oficina_Forno: vertices=32; faces=18; triangulos=60; mesh=Cilindro.028
+BLK_Pavilhao_Base_Direito: vertices=32; faces=18; triangulos=60; mesh=Cilindro.017
+BLK_Pavilhao_Base_Esquerdo: vertices=32; faces=18; triangulos=60; mesh=Cilindro.016
+BLK_Pavilhao_Direito_Cobertura: vertices=32; faces=18; triangulos=60; mesh=Cilindro.027
+BLK_Pavilhao_Direito_Coluna_01: vertices=24; faces=14; triangulos=44; mesh=Cilindro.022
+BLK_Pavilhao_Direito_Coluna_02: vertices=24; faces=14; triangulos=44; mesh=Cilindro.023
+BLK_Pavilhao_Direito_Coluna_03: vertices=24; faces=14; triangulos=44; mesh=Cilindro.024
+BLK_Pavilhao_Direito_Coluna_04: vertices=24; faces=14; triangulos=44; mesh=Cilindro.025
+BLK_Pavilhao_Esquerdo_Cobertura: vertices=32; faces=18; triangulos=60; mesh=Cilindro.026
+BLK_Pavilhao_Esquerdo_Coluna_01: vertices=24; faces=14; triangulos=44; mesh=Cilindro.018
+BLK_Pavilhao_Esquerdo_Coluna_02: vertices=24; faces=14; triangulos=44; mesh=Cilindro.019
+BLK_Pavilhao_Esquerdo_Coluna_03: vertices=24; faces=14; triangulos=44; mesh=Cilindro.020
+BLK_Pavilhao_Esquerdo_Coluna_04: vertices=24; faces=14; triangulos=44; mesh=Cilindro.021
+BLK_Placa_Bifurcacao_Sul: vertices=8; faces=6; triangulos=12; mesh=Cubo.030
+BLK_Placa_Bifurcacao_Travessa: vertices=8; faces=6; triangulos=12; mesh=Cubo.031
+BLK_Ponte_GuardaCorpo_Direito: vertices=8; faces=6; triangulos=12; mesh=Cubo.013
+BLK_Ponte_GuardaCorpo_Esquerdo: vertices=8; faces=6; triangulos=12; mesh=Cubo.012
+BLK_Ponte_Principal: vertices=8; faces=6; triangulos=12; mesh=Cubo.011
+BLK_Praca_Dos_Ventos: vertices=64; faces=34; triangulos=124; mesh=Cilindro.002
+BLK_Rampa_Santuario_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.004
+BLK_Rampa_Santuario_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.005
+BLK_Ruinas_Caminho_Observacao: vertices=8; faces=6; triangulos=12; mesh=Cubo.044
+BLK_Ruinas_Entrada_Dungeon: vertices=8; faces=6; triangulos=12; mesh=Cubo.039
+BLK_Ruinas_Fragmento_01: vertices=8; faces=6; triangulos=12; mesh=Cubo.040
+BLK_Ruinas_Fragmento_02: vertices=8; faces=6; triangulos=12; mesh=Cubo.041
+BLK_Ruinas_Fragmento_03: vertices=8; faces=6; triangulos=12; mesh=Cubo.042
+BLK_Ruinas_Fragmento_04: vertices=8; faces=6; triangulos=12; mesh=Cubo.043
+BLK_Ruinas_Limite_Rocha_01: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.021
+BLK_Ruinas_Limite_Rocha_02: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.022
+BLK_Ruinas_Limite_Rocha_03: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.023
+BLK_Ruinas_Limite_Rocha_04: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.024
+BLK_Ruinas_Observacao_GuardaCorpo: vertices=8; faces=6; triangulos=12; mesh=Cubo.045
+BLK_Ruinas_Pilar_Direito: vertices=48; faces=26; triangulos=92; mesh=Cilindro.061
+BLK_Ruinas_Pilar_Esquerdo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.060
+BLK_Ruinas_Plataforma_Dungeon: vertices=48; faces=26; triangulos=92; mesh=Cilindro.059
+BLK_Ruinas_Plataforma_Observacao: vertices=48; faces=26; triangulos=92; mesh=Cilindro.065
+BLK_Ruinas_Portal_Coluna_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.037
+BLK_Ruinas_Portal_Coluna_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.036
+BLK_Ruinas_Portal_Travessa: vertices=8; faces=6; triangulos=12; mesh=Cubo.038
+BLK_Santuario_Base: vertices=8; faces=6; triangulos=12; mesh=Cubo.006
+BLK_Santuario_Cobertura: vertices=8; faces=6; triangulos=12; mesh=Cubo.009
+BLK_Santuario_Coluna_01: vertices=32; faces=18; triangulos=60; mesh=Cilindro.005
+BLK_Santuario_Coluna_02: vertices=32; faces=18; triangulos=60; mesh=Cilindro.006
+BLK_Santuario_Coluna_03: vertices=32; faces=18; triangulos=60; mesh=Cilindro.007
+BLK_Santuario_Coluna_04: vertices=32; faces=18; triangulos=60; mesh=Cilindro.008
+BLK_Santuario_Corpo: vertices=8; faces=6; triangulos=12; mesh=Cubo.007
+BLK_Santuario_Corte_Entrada: vertices=8; faces=6; triangulos=12; mesh=Cubo.010
+BLK_Santuario_Viga_Frontal: vertices=8; faces=6; triangulos=12; mesh=Cubo.008
+BLK_Spawn_Plataforma: vertices=32; faces=18; triangulos=60; mesh=Cilindro.009
+BLK_Terreno_Ruinas_Sul: vertices=8; faces=6; triangulos=12; mesh=Cubo.033
+BLK_Terreno_Saida_Sul: vertices=8; faces=6; triangulos=12; mesh=Cubo.022
+MOD_Aerivia_Arbusto_Lado_Direito: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.031
+MOD_Aerivia_Arbusto_Lado_Esquerdo: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.030
+MOD_Aerivia_Arbusto_Nucleo: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.029
+MOD_Aerivia_Arco_Coluna_Direita: vertices=48; faces=26; triangulos=92; mesh=Cilindro.070
+MOD_Aerivia_Arco_Coluna_Esquerda: vertices=48; faces=26; triangulos=92; mesh=Cilindro.069
+MOD_Aerivia_Arco_Superior_Central: vertices=8; faces=6; triangulos=12; mesh=Cubo.050
+MOD_Aerivia_Arco_Superior_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.051
+MOD_Aerivia_Arco_Superior_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.049
+MOD_Aerivia_Arvore_Pequena_Copa_Principal: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.027
+MOD_Aerivia_Arvore_Pequena_Copa_Secundaria: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.028
+MOD_Aerivia_Arvore_Pequena_Tronco: vertices=48; faces=26; triangulos=92; mesh=Cilindro.102
+MOD_Aerivia_Banco_Assento: vertices=8; faces=6; triangulos=12; mesh=Cubo.102
+MOD_Aerivia_Banco_Detalhe_Direito: vertices=8; faces=6; triangulos=12; mesh=Cubo.105
+MOD_Aerivia_Banco_Detalhe_Esquerdo: vertices=8; faces=6; triangulos=12; mesh=Cubo.104
+MOD_Aerivia_Banco_Encosto: vertices=8; faces=6; triangulos=12; mesh=Cubo.103
+MOD_Aerivia_Banco_Suporte_Direito: vertices=48; faces=26; triangulos=92; mesh=Cilindro.097
+MOD_Aerivia_Banco_Suporte_Esquerdo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.096
+MOD_Aerivia_Canto_Externo_Frontal: vertices=8; faces=6; triangulos=12; mesh=Cubo.072
+MOD_Aerivia_Canto_Externo_Lateral: vertices=8; faces=6; triangulos=12; mesh=Cubo.073
+MOD_Aerivia_Canto_Interno_Frontal: vertices=8; faces=6; triangulos=12; mesh=Cubo.074
+MOD_Aerivia_Canto_Interno_Lateral: vertices=8; faces=6; triangulos=12; mesh=Cubo.075
+MOD_Aerivia_Cobertura_Aba_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.056
+MOD_Aerivia_Cobertura_Aba_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.055
+MOD_Aerivia_Cobertura_Acabamento_Frontal: vertices=8; faces=6; triangulos=12; mesh=Cubo.057
+MOD_Aerivia_Cobertura_Cumeeira: vertices=48; faces=26; triangulos=92; mesh=Cilindro.073
+MOD_Aerivia_Cobertura_Estrutura_Central: vertices=8; faces=6; triangulos=12; mesh=Cubo.054
+MOD_Aerivia_Coluna_Base: vertices=48; faces=26; triangulos=92; mesh=Cilindro.066
+MOD_Aerivia_Coluna_Capitel: vertices=48; faces=26; triangulos=92; mesh=Cilindro.068
+MOD_Aerivia_Coluna_Corpo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.067
+MOD_Aerivia_Escada_Degrau_01: vertices=8; faces=6; triangulos=12; mesh=Cubo.058
+MOD_Aerivia_Escada_Degrau_02: vertices=8; faces=6; triangulos=12; mesh=Cubo.059
+MOD_Aerivia_Escada_Degrau_03: vertices=8; faces=6; triangulos=12; mesh=Cubo.060
+MOD_Aerivia_Escada_Degrau_04: vertices=8; faces=6; triangulos=12; mesh=Cubo.061
+MOD_Aerivia_Escada_Degrau_05: vertices=8; faces=6; triangulos=12; mesh=Cubo.062
+MOD_Aerivia_Escada_Patamar: vertices=8; faces=6; triangulos=12; mesh=Cubo.063
+MOD_Aerivia_Folhas_Central: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.032
+MOD_Aerivia_Folhas_Direita: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.034
+MOD_Aerivia_Folhas_Esquerda: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.033
+MOD_Aerivia_Folhas_Frontal: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.035
+MOD_Aerivia_Fonte_Agua: vertices=48; faces=26; triangulos=92; mesh=Cilindro.087
+MOD_Aerivia_Fonte_Base: vertices=48; faces=26; triangulos=92; mesh=Cilindro.085
+MOD_Aerivia_Fonte_Coluna_Base: vertices=48; faces=26; triangulos=92; mesh=Cilindro.088
+MOD_Aerivia_Fonte_Coluna_Corpo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.089
+MOD_Aerivia_Fonte_Nucleo: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.025
+MOD_Aerivia_Fonte_Taca_Superior: vertices=48; faces=26; triangulos=92; mesh=Cilindro.090
+MOD_Aerivia_Fonte_Tanque_Borda: vertices=576; faces=576; triangulos=1152; mesh=Toróide
+MOD_Aerivia_Fonte_Tanque_Piso: vertices=48; faces=26; triangulos=92; mesh=Cilindro.086
+MOD_Aerivia_GuardaCorpo_Suporte_Direito: vertices=48; faces=26; triangulos=92; mesh=Cilindro.072
+MOD_Aerivia_GuardaCorpo_Suporte_Esquerdo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.071
+MOD_Aerivia_GuardaCorpo_Travessa_Inferior: vertices=8; faces=6; triangulos=12; mesh=Cubo.053
+MOD_Aerivia_GuardaCorpo_Travessa_Superior: vertices=8; faces=6; triangulos=12; mesh=Cubo.052
+MOD_Aerivia_Moldura_Janela_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.081
+MOD_Aerivia_Moldura_Janela_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.080
+MOD_Aerivia_Moldura_Janela_Inferior: vertices=8; faces=6; triangulos=12; mesh=Cubo.082
+MOD_Aerivia_Moldura_Janela_Superior: vertices=8; faces=6; triangulos=12; mesh=Cubo.083
+MOD_Aerivia_Moldura_Porta_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.077
+MOD_Aerivia_Moldura_Porta_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.076
+MOD_Aerivia_Moldura_Porta_Soleira: vertices=8; faces=6; triangulos=12; mesh=Cubo.079
+MOD_Aerivia_Moldura_Porta_Superior: vertices=8; faces=6; triangulos=12; mesh=Cubo.078
+MOD_Aerivia_Parede_4x4: vertices=8; faces=6; triangulos=12; mesh=Cubo.064
+MOD_Aerivia_Parede_Janela_Base: vertices=8; faces=6; triangulos=12; mesh=Cubo.070
+MOD_Aerivia_Parede_Janela_Lateral_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.069
+MOD_Aerivia_Parede_Janela_Lateral_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.068
+MOD_Aerivia_Parede_Janela_Travessa: vertices=8; faces=6; triangulos=12; mesh=Cubo.071
+MOD_Aerivia_Parede_Porta_Lateral_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.066
+MOD_Aerivia_Parede_Porta_Lateral_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.065
+MOD_Aerivia_Parede_Porta_Travessa: vertices=8; faces=6; triangulos=12; mesh=Cubo.067
+MOD_Aerivia_Pedestal_Base: vertices=48; faces=26; triangulos=92; mesh=Cilindro.081
+MOD_Aerivia_Pedestal_Corpo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.082
+MOD_Aerivia_Pedestal_Moldura_Superior: vertices=48; faces=26; triangulos=92; mesh=Cilindro.083
+MOD_Aerivia_Pedestal_Plataforma: vertices=48; faces=26; triangulos=92; mesh=Cilindro.084
+MOD_Aerivia_Piso_2x4: vertices=8; faces=6; triangulos=12; mesh=Cubo.047
+MOD_Aerivia_Piso_4x4: vertices=8; faces=6; triangulos=12; mesh=Cubo.046
+MOD_Aerivia_Piso_Borda_4x1: vertices=8; faces=6; triangulos=12; mesh=Cubo.048
+MOD_Aerivia_Ponte_Encaixe_Terreno: vertices=8; faces=6; triangulos=12; mesh=Cubo.088
+MOD_Aerivia_Ponte_Entrada_Borda_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.091
+MOD_Aerivia_Ponte_Entrada_Borda_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.090
+MOD_Aerivia_Ponte_Entrada_Capitel_Direito: vertices=48; faces=26; triangulos=92; mesh=Cilindro.079
+MOD_Aerivia_Ponte_Entrada_Capitel_Esquerdo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.078
+MOD_Aerivia_Ponte_Entrada_Pilar_Direito: vertices=48; faces=26; triangulos=92; mesh=Cilindro.077
+MOD_Aerivia_Ponte_Entrada_Pilar_Esquerdo: vertices=48; faces=26; triangulos=92; mesh=Cilindro.076
+MOD_Aerivia_Ponte_Piso_4x4: vertices=8; faces=6; triangulos=12; mesh=Cubo.084
+MOD_Aerivia_Ponte_Rampa_Transicao: vertices=8; faces=6; triangulos=12; mesh=Cubo.089
+MOD_Aerivia_Ponte_Suporte_Base: vertices=48; faces=26; triangulos=92; mesh=Cilindro.075
+MOD_Aerivia_Ponte_Suporte_Central: vertices=48; faces=26; triangulos=92; mesh=Cilindro.074
+MOD_Aerivia_Ponte_Travessa_Inferior: vertices=8; faces=6; triangulos=12; mesh=Cubo.087
+MOD_Aerivia_Ponte_Viga_Direita: vertices=8; faces=6; triangulos=12; mesh=Cubo.086
+MOD_Aerivia_Ponte_Viga_Esquerda: vertices=8; faces=6; triangulos=12; mesh=Cubo.085
+MOD_Aerivia_Poste_Base_Inferior: vertices=48; faces=26; triangulos=92; mesh=Cilindro.091
+MOD_Aerivia_Poste_Base_Superior: vertices=48; faces=26; triangulos=92; mesh=Cilindro.092
+MOD_Aerivia_Poste_Braco_Inclinado: vertices=8; faces=6; triangulos=12; mesh=Cubo.100
+MOD_Aerivia_Poste_Braco_Ponta: vertices=8; faces=6; triangulos=12; mesh=Cubo.101
+MOD_Aerivia_Poste_Capitel: vertices=48; faces=26; triangulos=92; mesh=Cilindro.094
+MOD_Aerivia_Poste_Cristal: vertices=42; faces=80; triangulos=80; mesh=Esfera icosaédrica.026
+MOD_Aerivia_Poste_Haste: vertices=48; faces=26; triangulos=92; mesh=Cilindro.093
+MOD_Aerivia_Poste_Suporte_Pendente: vertices=48; faces=26; triangulos=92; mesh=Cilindro.095
+MOD_Aerivia_Praca_Borda_Nordeste: vertices=8; faces=6; triangulos=12; mesh=Cubo.093
+MOD_Aerivia_Praca_Borda_Noroeste: vertices=8; faces=6; triangulos=12; mesh=Cubo.092
+MOD_Aerivia_Praca_Borda_Sudeste: vertices=8; faces=6; triangulos=12; mesh=Cubo.095
+MOD_Aerivia_Praca_Borda_Sudoeste: vertices=8; faces=6; triangulos=12; mesh=Cubo.094
+MOD_Aerivia_Praca_Encaixe_Leste: vertices=8; faces=6; triangulos=12; mesh=Cubo.099
+MOD_Aerivia_Praca_Encaixe_Norte: vertices=8; faces=6; triangulos=12; mesh=Cubo.096
+MOD_Aerivia_Praca_Encaixe_Oeste: vertices=8; faces=6; triangulos=12; mesh=Cubo.098
+MOD_Aerivia_Praca_Encaixe_Sul: vertices=8; faces=6; triangulos=12; mesh=Cubo.097
+MOD_Aerivia_Praca_Piso_Central: vertices=48; faces=26; triangulos=92; mesh=Cilindro.080
+MOD_Aerivia_Vaso_Base: vertices=48; faces=26; triangulos=92; mesh=Cilindro.098
+MOD_Aerivia_Vaso_Borda: vertices=576; faces=576; triangulos=1152; mesh=Toróide.001
+MOD_Aerivia_Vaso_Corpo_Inferior: vertices=48; faces=26; triangulos=92; mesh=Cilindro.099
+MOD_Aerivia_Vaso_Corpo_Superior: vertices=48; faces=26; triangulos=92; mesh=Cilindro.100
+MOD_Aerivia_Vaso_Substrato: vertices=48; faces=26; triangulos=92; mesh=Cilindro.101
+REF_Jogador_180cm: vertices=8; faces=6; triangulos=12; mesh=Cubo
+REF_NPC_Guia_Clareira_Sul: vertices=32; faces=18; triangulos=60; mesh=Cilindro.048
+REF_Ponto_Retorno_Clareira_Sul: vertices=32; faces=18; triangulos=60; mesh=Cilindro.049
+REF_Recurso_Bosque_01: vertices=32; faces=18; triangulos=60; mesh=Cilindro.050
+REF_Recurso_Bosque_02: vertices=32; faces=18; triangulos=60; mesh=Cilindro.051
+REF_Recurso_Bosque_Raro: vertices=32; faces=18; triangulos=60; mesh=Cilindro.052
+REF_Recurso_Nascente_01: vertices=32; faces=18; triangulos=60; mesh=Cilindro.047
+REF_Spawn_Chefe_Guardiao_Ruinas: vertices=48; faces=26; triangulos=92; mesh=Cilindro.064
+REF_Spawn_Mob_Bosque_01: vertices=20; faces=12; triangulos=36; mesh=Cilindro.038
+REF_Spawn_Mob_Bosque_02: vertices=20; faces=12; triangulos=36; mesh=Cilindro.039
+REF_Spawn_Mob_Bosque_Elite: vertices=20; faces=12; triangulos=36; mesh=Cilindro.040
+REF_Spawn_Mob_Nascente_01: vertices=32; faces=18; triangulos=60; mesh=Cilindro.044
+REF_Spawn_Mob_Nascente_02: vertices=32; faces=18; triangulos=60; mesh=Cilindro.045
+REF_Spawn_Mob_Ruinas_Elite_01: vertices=48; faces=26; triangulos=92; mesh=Cilindro.062
+REF_Spawn_Mob_Ruinas_Elite_02: vertices=48; faces=26; triangulos=92; mesh=Cilindro.063
+
+COMANDO
+------------------------------------------------------------------------
+"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" --background "C:\Users\bruno\Desktop\weapons-masters\weapons-masters\3D\blender\spawn\Aerivia_Blockout_v003_organizado.blend" --python "C:\Users\bruno\Desktop\weapons-masters\weapons-masters\tools\blender\auditar_aerivia.py"
