@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using Godot;
 
 namespace WeaponsMastersClient.Game;
@@ -13,13 +14,18 @@ public partial class AeriviaTestPlayer : CharacterBody3D
 
     private Node3D _cameraPivot = null!;
     private Node3D _visual = null!;
+    private AnimationPlayer _animationPlayer = null!;
+    private string _currentAnimation = string.Empty;
     private float _gravity;
 
     public override void _Ready()
     {
         _cameraPivot = GetNode<Node3D>("CameraPivot");
         _visual = GetNode<Node3D>("Visual");
+        _animationPlayer = FindAnimationPlayer(_visual)
+            ?? throw new InvalidOperationException("AnimationPlayer do personagem nao encontrado.");
         _gravity = (float)ProjectSettings.GetSetting("physics/3d/default_gravity", 9.8).AsDouble();
+        ConfigureAnimations();
 
         if (DisplayServer.GetName() != "headless")
         {
@@ -86,7 +92,7 @@ public partial class AeriviaTestPlayer : CharacterBody3D
         {
             velocity.X = Mathf.MoveToward(velocity.X, direction.X * MovementSpeed, Acceleration * frameDelta);
             velocity.Z = Mathf.MoveToward(velocity.Z, direction.Z * MovementSpeed, Acceleration * frameDelta);
-            _visual.LookAt(_visual.GlobalPosition + direction, Vector3.Up);
+            _visual.LookAt(_visual.GlobalPosition + direction, Vector3.Up, true);
         }
         else
         {
@@ -96,5 +102,65 @@ public partial class AeriviaTestPlayer : CharacterBody3D
 
         Velocity = velocity;
         MoveAndSlide();
+        UpdateLocomotionAnimation();
+    }
+
+    private void ConfigureAnimations()
+    {
+        foreach (var animationName in new StringName[] { "Idle", "Walk", "Run" })
+        {
+            if (_animationPlayer.HasAnimation(animationName))
+            {
+                _animationPlayer.GetAnimation(animationName).LoopMode = Animation.LoopModeEnum.Linear;
+            }
+        }
+
+        PlayAnimation("Idle");
+        GD.Print("AERIVIA_PLAYER_CHARACTER_READY");
+        GD.Print(
+            $"AERIVIA_PLAYER_CHARACTER_ANIMATIONS={string.Join('|', _animationPlayer.GetAnimationList())}"
+        );
+    }
+
+    private void UpdateLocomotionAnimation()
+    {
+        float horizontalSpeed = new Vector2(Velocity.X, Velocity.Z).Length();
+        string nextAnimation = horizontalSpeed switch
+        {
+            < 0.1f => "Idle",
+            var speed when speed < MovementSpeed * 0.7f => "Walk",
+            _ => "Run",
+        };
+        PlayAnimation(nextAnimation);
+    }
+
+    private void PlayAnimation(string animationName)
+    {
+        if (_currentAnimation == animationName || !_animationPlayer.HasAnimation(animationName))
+        {
+            return;
+        }
+
+        _animationPlayer.Play(animationName, customBlend: 0.15);
+        _currentAnimation = animationName;
+    }
+
+    private static AnimationPlayer? FindAnimationPlayer(Node node)
+    {
+        if (node is AnimationPlayer animationPlayer)
+        {
+            return animationPlayer;
+        }
+
+        foreach (var child in node.GetChildren())
+        {
+            var result = FindAnimationPlayer(child);
+            if (result is not null)
+            {
+                return result;
+            }
+        }
+
+        return null;
     }
 }

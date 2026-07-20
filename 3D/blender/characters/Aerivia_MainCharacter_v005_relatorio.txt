@@ -1,0 +1,36 @@
+RELATORIO - AERIVIA MAIN CHARACTER V005
+========================================================
+Arquivo Blender: C:\Users\bruno\Desktop\weapons-masters\weapons-masters\3D\blender\characters\Aerivia_MainCharacter_v005.blend
+Preview: C:\Users\bruno\Desktop\weapons-masters\weapons-masters\3D\blender\characters\Aerivia_MainCharacter_v005_preview.png
+Blender: 5.1.2
+Direcao visual: feminina estilizada, turquesa/branco/prata, cabelo duplo.
+Altura visual aproximada: 1.892 m
+Vertices da malha principal: 2312
+Faces da malha principal: 2232
+Triangulos estimados: 4356
+Materiais da malha principal: 11
+Ossos deformadores: 17
+Total de ossos: 18
+Grupos de vertices: 17
+Modificador Armature valido: SIM
+Espada presa ao osso: hand.R
+Animacoes:
+- RESET: frames 1-1
+- Idle: frames 1-36
+- Walk: frames 1-25
+- Run: frames 1-19
+
+COLECOES
+- 01_CHARACTER: malha principal
+- 02_RIG: armature
+- 03_EQUIPMENT: espada
+- 90_PREVIEW: camera, luzes e pedestal (nao exportar)
+
+LIMITACOES DO BLOCKOUT
+- Pesos rigidos por segmento; as articulacoes ainda precisam de weight paint refinado.
+- Rosto, maos, cabelo, roupa e armadura sao formas low-poly provisórias.
+- RESET, Idle, Walk e Run validam o pipeline, mas nao sao animacoes finais.
+- A espada e um placeholder preso a hand.R.
+
+COMANDO UTILIZADO
+"C:\Program Files\Blender Foundation\Blender 5.1\blender.exe" --background --factory-startup --python "C:\Users\bruno\Desktop\weapons-masters\weapons-masters\tools\blender\criar_personagem_principal.py" -- --aerivia-generate --version=v005
